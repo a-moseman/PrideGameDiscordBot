@@ -1,0 +1,4 @@
+# Project exclude paths
+/ClickerGame/target/
+/DiscordBot/target/
+/target/
