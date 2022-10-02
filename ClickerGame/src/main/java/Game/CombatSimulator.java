@@ -1,10 +1,8 @@
-package Game.Combat;
+package Game;
 
-
-import Game.Player;
 
 public class CombatSimulator {
-    public static long simulate (Player attacker, Player defender) {
+    protected static long simulate (Player attacker, Player defender) {
         /*
         Combat is initiated by a player, who is referred to as the attack, against another player, who is referred to as the defender.
         Procedure:

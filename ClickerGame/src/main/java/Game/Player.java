@@ -1,8 +1,5 @@
 package Game;
 
-import Game.Combat.CombatModule;
-import Game.Combat.CombatStats;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -19,7 +16,7 @@ public class Player implements Comparable<Player> {
 
     private CombatModule combatModule; // Unlocked at prestige 1
 
-    public Player() {
+    protected Player() {
         // Needed for Jackson JSON library serialization/deserialization or something
         // i.e. don't remove or code breaks
         this.stats = new Stats(1);
@@ -27,7 +24,7 @@ public class Player implements Comparable<Player> {
 
     }
 
-    public Player(long lastPrideCollectionTime, long pride, long ego, int prestige, ArrayList<Artifact> artifacts, CombatModule combatModule) {
+    protected Player(long lastPrideCollectionTime, long pride, long ego, int prestige, ArrayList<Artifact> artifacts, CombatModule combatModule) {
         this.stats = new Stats(1);
         this.lastPrideCollectionTime = lastPrideCollectionTime;
         this.pride = pride;
@@ -106,6 +103,41 @@ public class Player implements Comparable<Player> {
         artifacts.add(artifact);
     }
 
+    // GETTERS
+    protected long getLastPrideCollectionTime() {
+        return lastPrideCollectionTime;
+    }
+
+    protected ArrayList<Artifact> getArtifacts() {
+        return artifacts;
+    }
+
+    protected ArrayList<Artifact> getSortedArtifacts() {
+        ArrayList<Artifact> sortedArtifacts = new ArrayList<>(artifacts);
+        Collections.sort(sortedArtifacts);
+        return sortedArtifacts;
+    }
+
+    protected long getPride() {
+        return pride;
+    }
+
+    protected long getEgo() {
+        return ego;
+    }
+
+    protected int getPrestige() {
+        return prestige;
+    }
+
+    protected boolean hasCombatModule() {
+        return combatModule != null;
+    }
+
+    protected CombatStats getCombatStats() {
+        return combatModule.getCombatStats();
+    }
+
     @Override
     public int compareTo(Player player) {
         int prestigeComparison = Math.min(Math.max(prestige - player.getPrestige(), -1), 1);
@@ -118,40 +150,5 @@ public class Player implements Comparable<Player> {
             return egoComparison;
         }
         return prestigeComparison;
-    }
-
-    // GETTERS
-    public long getLastPrideCollectionTime() {
-        return lastPrideCollectionTime;
-    }
-
-    public ArrayList<Artifact> getArtifacts() {
-        return artifacts;
-    }
-
-    public ArrayList<Artifact> getSortedArtifacts() {
-        ArrayList<Artifact> sortedArtifacts = new ArrayList<>(artifacts);
-        Collections.sort(sortedArtifacts);
-        return sortedArtifacts;
-    }
-
-    public long getPride() {
-        return pride;
-    }
-
-    public long getEgo() {
-        return ego;
-    }
-
-    public int getPrestige() {
-        return prestige;
-    }
-
-    public boolean hasCombatModule() {
-        return combatModule != null;
-    }
-
-    public CombatStats getCombatStats() {
-        return combatModule.getCombatStats();
     }
 }

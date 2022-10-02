@@ -1,26 +1,26 @@
 package Game;
 
 public class Stats {
-    public final long PRIDE_PER_COLLECTION;
-    public final double COLLECTION_CRIT_PROBABILITY;
+    protected final long PRIDE_PER_COLLECTION;
+    protected final double COLLECTION_CRIT_PROBABILITY;
 
-    public Stats() {
+    protected Stats() {
         // for Jackson
         this.PRIDE_PER_COLLECTION = 0;
         this.COLLECTION_CRIT_PROBABILITY = 0;
     }
 
-    public Stats(long pridePerCollection) {
+    protected Stats(long pridePerCollection) {
         this.PRIDE_PER_COLLECTION = pridePerCollection;
         this.COLLECTION_CRIT_PROBABILITY = 0;
     }
 
-    public Stats(long pridePerCollection, double collectionCritProbability) {
+    protected Stats(long pridePerCollection, double collectionCritProbability) {
         this.PRIDE_PER_COLLECTION = pridePerCollection;
         this.COLLECTION_CRIT_PROBABILITY = collectionCritProbability;
     }
 
-    public Stats add(Stats other) {
+    protected Stats add(Stats other) {
         return new Stats(
                 PRIDE_PER_COLLECTION + other.PRIDE_PER_COLLECTION,
                 COLLECTION_CRIT_PROBABILITY + other.COLLECTION_CRIT_PROBABILITY

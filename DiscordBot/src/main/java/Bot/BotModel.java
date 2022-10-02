@@ -83,6 +83,7 @@ public class BotModel {
     }
 
     private Response bless(Command command) {
+        // TODO: add ability to roll for bless
         if (command.getSize() < 3) {
             return ERR_MISSING_ARGS;
         }

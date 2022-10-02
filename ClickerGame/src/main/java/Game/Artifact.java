@@ -8,25 +8,21 @@ public class Artifact implements Comparable<Artifact> {
     private Stats stats;
     private int grade;
 
-    public Artifact() {
-        // for Jackson deserialization
-    }
-
-    public Artifact(String name, Stats stats, int grade) {
+    protected Artifact(String name, Stats stats, int grade) {
         this.name = name;
         this.stats = stats;
         this.grade = grade;
     }
 
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
-    public Stats getStats() {
+    protected Stats getStats() {
         return stats;
     }
 
-    public int getGrade() {
+    protected int getGrade() {
         return grade;
     }
 
@@ -57,7 +53,7 @@ public class Artifact implements Comparable<Artifact> {
         return null;
     }
 
-    public static Artifact searchForArtifact() {
+    protected static Artifact searchForArtifact() {
         return RANDOM.nextDouble() < Parameters.ARTIFACT_DROP_PROBABILITY ? getArtifact(rollForGrade()) : null;
     }
 

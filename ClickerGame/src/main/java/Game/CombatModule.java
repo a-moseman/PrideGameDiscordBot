@@ -1,31 +1,31 @@
-package Game.Combat;
+package Game;
 
 public class CombatModule {
     private long timeOfLastAttack;
     private CombatStats combatStats;
 
-    public CombatModule() {
+    protected CombatModule() {
 
     }
 
-    public CombatModule(long timeOfLastAttack, CombatStats combatStats) {
+    protected CombatModule(long timeOfLastAttack, CombatStats combatStats) {
         this.timeOfLastAttack = timeOfLastAttack;
         this.combatStats = combatStats;
     }
 
-    public boolean isOffCooldown() {
+    protected boolean isOffCooldown() {
         return (double) (System.currentTimeMillis() - timeOfLastAttack) / 1000 / 60 / 60 / 24 >= 1;
     }
 
-    public void updateCooldown() {
+    protected void updateCooldown() {
         timeOfLastAttack = System.currentTimeMillis();
     }
 
-    public long getTimeOfLastAttack() {
+    protected long getTimeOfLastAttack() {
         return timeOfLastAttack;
     }
 
-    public CombatStats getCombatStats() {
+    protected CombatStats getCombatStats() {
         return combatStats;
     }
 }

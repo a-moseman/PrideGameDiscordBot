@@ -1,8 +1,5 @@
 package Game;
 
-import Game.Combat.CombatSimulator;
-import Game.Combat.Dice;
-import Game.Combat.ItemMerchant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -11,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+// TODO: move all processing to GameModel and make this just an API for the game.
 public class GameInterface {
     private GameModel gameModel;
 
@@ -91,44 +89,44 @@ public class GameInterface {
         Dice dice = null;
         switch (die.toUpperCase(Locale.ROOT)) {
             case "D2":
-                if (getPride(uuid) >= ItemMerchant.D2_PRIDE_COST) {
-                    cost = ItemMerchant.D2_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D2_PRIDE_COST) {
+                    cost = CombatItemMerchant.D2_PRIDE_COST;
                     dice = Dice.D2;
                 }
                 break;
             case "D4":
-                if (getPride(uuid) >= ItemMerchant.D4_PRIDE_COST) {
-                    cost = ItemMerchant.D4_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D4_PRIDE_COST) {
+                    cost = CombatItemMerchant.D4_PRIDE_COST;
                     dice = Dice.D4;
                 }
                 break;
             case "D6":
-                if (getPride(uuid) >= ItemMerchant.D6_PRIDE_COST) {
-                    cost = ItemMerchant.D6_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D6_PRIDE_COST) {
+                    cost = CombatItemMerchant.D6_PRIDE_COST;
                     dice = Dice.D6;
                 }
                 break;
             case "D8":
-                if (getPride(uuid) >= ItemMerchant.D8_PRIDE_COST) {
-                    cost = ItemMerchant.D8_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D8_PRIDE_COST) {
+                    cost = CombatItemMerchant.D8_PRIDE_COST;
                     dice = Dice.D8;
                 }
                 break;
             case "D10":
-                if (getPride(uuid) >= ItemMerchant.D10_PRIDE_COST) {
-                    cost = ItemMerchant.D10_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D10_PRIDE_COST) {
+                    cost = CombatItemMerchant.D10_PRIDE_COST;
                     dice = Dice.D10;
                 }
                 break;
             case "D12":
-                if (getPride(uuid) >= ItemMerchant.D12_PRIDE_COST) {
-                    cost = ItemMerchant.D12_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D12_PRIDE_COST) {
+                    cost = CombatItemMerchant.D12_PRIDE_COST;
                     dice = Dice.D12;
                 }
                 break;
             case "D20":
-                if (getPride(uuid) >= ItemMerchant.D20_PRIDE_COST) {
-                    cost = ItemMerchant.D20_PRIDE_COST;
+                if (getPride(uuid) >= CombatItemMerchant.D20_PRIDE_COST) {
+                    cost = CombatItemMerchant.D20_PRIDE_COST;
                     dice = Dice.D20;
                 }
                 break;

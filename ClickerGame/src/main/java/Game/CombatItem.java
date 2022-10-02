@@ -1,23 +1,19 @@
-package Game.Combat;
+package Game;
 
-public class Item {
+public class CombatItem {
     private Dice attackDice;
     private Dice defenseDice;
 
-    public Item(){
-
-    }
-
-    public Item(Dice attackDice, Dice defenseDice) {
+    protected CombatItem(Dice attackDice, Dice defenseDice) {
         this.attackDice = attackDice;
         this.defenseDice = defenseDice;
     }
 
-    public Dice getAttackDice() {
+    protected Dice getAttackDice() {
         return attackDice;
     }
 
-    public Dice getDefenseDice() {
+    protected Dice getDefenseDice() {
         return defenseDice;
     }
 }
