@@ -18,14 +18,17 @@ public class BotModel {
     private static final String COMMANDS_MESSAGE_COLLECT = "p>collect - Collect your daily pride or shame. If you currently have more pride, you will collect pride, and vice versa.";
     private static final String COMMANDS_MESSAGE_STATS = "p>stats <target> - Provides your personal stats. With the optional target argument, a mention, you get the target player's stats.";
     private static final String COMMANDS_MESSAGE_GAMEINFO = "p>gameinfo - Provides information on how aspects of the game work.";
+    private static final String COMMANDS_MESSAGE_BOTINFO = "p>botinfo - Provides information on the bot.";
     private static final String COMMANDS_MESSAGE_COMMANDS = "p>commands - Provides the list of commands.";
     private static final String COMMANDS_MESSAGE_BUY = "p>buy <type> <amount> - Purchase one of the given type {ego, guilt, honor, dishonor}. The optional amount argument can be used for some of the types to buy more than one in a single command invocation.";
     private static final String COMMANDS_MESSAGE_HELP = "p>help - Provides some helpful starting information.";
 
     private GameAPI api;
+    private final long START_TIME;
 
     public BotModel(String savePath) {
-        api = new GameAPI(savePath);
+        this.START_TIME = System.currentTimeMillis();
+        this.api = new GameAPI(savePath);
     }
 
     public boolean doesPlayerExist(String uuid) {
@@ -57,6 +60,8 @@ public class BotModel {
                 return stats(command);
             case "GAMEINFO":
                 return gameinfo(command);
+            case "BOTINFO" :
+                return botinfo(command);
             case "COMMANDS":
                 return commands(command);
             case "HELP":
@@ -218,7 +223,7 @@ public class BotModel {
     }
 
     private Response gameinfo(Command command) {
-        return new Response("MESSAGE", "Info:" +
+        return new Response("MESSAGE", "Game Info:" +
                 "\n\tPride and Shame:" +
                 "\n\t\tThe two atomic values of the game." +
                 "\n\t\tEffectively a currency." +
@@ -233,6 +238,19 @@ public class BotModel {
         );
     }
 
+    private Response botinfo(Command command) {
+        return new Response("MESSAGE", "Bot Info:" +
+                "\n\tUptime: " + getUptime() + " days" +
+                "\n\tVersion: v1.0" +
+                "\n\tDeveloper: Glyphical" +
+                "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot"
+        );
+    }
+
+    private double getUptime() {
+        return (double) (System.currentTimeMillis() - START_TIME) / 1000 / 60 / 60 / 24;
+    }
+
     private Response commands(Command command) {
         return new Response("MESSAGE", "Commands:" +
                 "\n\t" + COMMANDS_MESSAGE_BLESS +
@@ -241,6 +259,7 @@ public class BotModel {
                 "\n\t" + COMMANDS_MESSAGE_BUY +
                 "\n\t" + COMMANDS_MESSAGE_STATS +
                 "\n\t" + COMMANDS_MESSAGE_GAMEINFO +
+                "\n\t" + COMMANDS_MESSAGE_BOTINFO +
                 "\n\t" + COMMANDS_MESSAGE_COMMANDS +
                 "\n\t" + COMMANDS_MESSAGE_HELP
         );
