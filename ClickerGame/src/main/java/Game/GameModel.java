@@ -33,4 +33,14 @@ public class GameModel {
         Collections.sort(rankedPlayers);
         return rankedPlayers;
     }
+
+    protected long simulateCombat(String attackerUUID, String defenderUUID) {
+        Player attacker = players.get(attackerUUID);
+        Player defender = players.get(defenderUUID);
+        long result = CombatSimulator.simulate(attacker, defender);
+        long prideToExchange = Math.min(defender.getPride(), Math.abs(result));
+        attacker.addPride(prideToExchange);
+        defender.addPride(-prideToExchange);
+        return result;
+    }
 }

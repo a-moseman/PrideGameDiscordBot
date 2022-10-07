@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Locale;
 
 // TODO: move all processing to GameModel and make this just an API for the game.
+
+/**
+ * The API of the game.
+ * The only thing accessible outside of the Game package.
+ */
 public class GameInterface {
     private GameModel gameModel;
 
@@ -17,15 +22,11 @@ public class GameInterface {
     }
 
     public void load(String path) {
-        // TODO: implement
-        // load game data, etc.
         if (!(new File(path).exists())) {
             return;
         }
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            gameModel = mapper.readValue(Paths.get(path).toFile(), GameModel.class);
-
+            // TODO: implement
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -33,22 +34,12 @@ public class GameInterface {
     }
 
     public void save(String path) {
-        try {
-            File file = new File(path);
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(file, gameModel);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        // TODO: implement
     }
 
     public String simulateCombat(String attackerUUID, String defenderUUID) {
-        long result = CombatSimulator.simulate(gameModel.getPlayer(attackerUUID), gameModel.getPlayer(defenderUUID));
-        long prideToExchange = Math.min(getPride(defenderUUID), Math.abs(result));
-        addPride(defenderUUID, -prideToExchange);
-        addPride(attackerUUID, prideToExchange);
-        return (result > 0 ? "Attacker" : "Defender") + "wins!\n" + prideToExchange + " pride was exchanged.";
+        long result = gameModel.simulateCombat(attackerUUID, defenderUUID);
+        return (result > 0 ? "Attacker" : "Defender") + "wins!\n" + result + " pride was exchanged.";
     }
 
     public String searchForArtifact(String uuid) {
