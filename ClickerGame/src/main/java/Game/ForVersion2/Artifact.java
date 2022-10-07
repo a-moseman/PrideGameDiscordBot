@@ -1,16 +1,16 @@
-package Game;
+package Game.ForVersion2;
 
 import java.util.Random;
 
 public class Artifact implements Comparable<Artifact> {
     private static final Random RANDOM = new Random();
     private String name;
-    private Stats stats;
+    private PrideCollectionStats prideCollectionStats;
     private int grade;
 
-    protected Artifact(String name, Stats stats, int grade) {
+    protected Artifact(String name, PrideCollectionStats prideCollectionStats, int grade) {
         this.name = name;
-        this.stats = stats;
+        this.prideCollectionStats = prideCollectionStats;
         this.grade = grade;
     }
 
@@ -18,8 +18,8 @@ public class Artifact implements Comparable<Artifact> {
         return name;
     }
 
-    protected Stats getStats() {
-        return stats;
+    protected PrideCollectionStats getStats() {
+        return prideCollectionStats;
     }
 
     protected int getGrade() {
@@ -58,11 +58,11 @@ public class Artifact implements Comparable<Artifact> {
     }
 
     private static Artifact buildNamelessItemOne(int grade) {
-        return new Artifact("Nameless One", new Stats(1 * grade, 0), grade);
+        return new Artifact("Nameless One", new PrideCollectionStats(1 * grade, 0), grade);
     }
 
     private static Artifact buildNamelessItemTwo(int grade) {
-        return new Artifact("Nameless Two", new Stats(0, 0.01 * grade), grade);
+        return new Artifact("Nameless Two", new PrideCollectionStats(0, 0.01 * grade), grade);
     }
 
     @Override

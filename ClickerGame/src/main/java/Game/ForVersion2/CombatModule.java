@@ -1,4 +1,4 @@
-package Game;
+package Game.ForVersion2;
 
 public class CombatModule {
     private long timeOfLastAttack;

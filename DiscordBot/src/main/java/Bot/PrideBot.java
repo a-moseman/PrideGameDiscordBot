@@ -12,8 +12,7 @@ public class PrideBot extends ListenerAdapter {
     private BotListener botListener;
 
     public PrideBot(String token, String savePath) {
-        this.botModel = new BotModel();
-        this.botModel.initialize(savePath);
+        this.botModel = new BotModel(savePath);
         this.botListener = new BotListener(botModel);
         this.jda = JDABuilder.createDefault(token)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)

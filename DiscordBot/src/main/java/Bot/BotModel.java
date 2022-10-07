@@ -1,6 +1,8 @@
 package Bot;
 
-import Game.GameInterface;
+import Game.GameAPI;
+
+import java.util.Locale;
 
 public class BotModel {
     private static final Response ERR_NOT_ADMIN = new Response("ERROR", "Not admin.");
@@ -9,81 +11,63 @@ public class BotModel {
     private static final Response ERR_MISSING_ARGS = new Response("ERROR", "Missing arguments.");
     private static final Response ERR_INVALID_ARG = new Response("ERROR",  "Invalid argument.");
     private static final Response ERR_PLAYER_DNE = new Response("ERROR",  "Player does not exist.");
-    private static final Response ERR_INSUFFICIENT_PRIDE = new Response("ERROR", "Insufficient pride.");
     private static final Response RESPONSE_BLESSING = new Response("MESSAGE", "A blessing has occurred.");
-    private static final Response RESPONSE_EGO_LEVEL_UP = new Response("MESSAGE", "Your ego has leveled up.");
-
-    private static final String COMMANDS_MESSAGE_BLESS = "p>bless <target> <amount> - Grants the target player the given amount of pride. The target argument must be a mention and the amount argument must an integer. Only users with the PrideAdminRole can use this.";
-    private static final String COMMANDS_MESSAGE_COLLECT = "p>collect - Grants you your daily pride.";
-    private static final String COMMANDS_MESSAGE_LEVELUP = "p>levelup <levels> - Levels up your ego at the cost of some pride. The optional levels argument is the amount of times you want to level up your ego.";
-    private static final String COMMANDS_MESSAGE_PRESTIGE = "p>prestige - Levels up your prestige at the cost of some ego.";
-    private static final String COMMANDS_MESSAGE_SEARCH = "p>search - Pay 1 pride to search for an artifact.";
-    private static final String COMMANDS_MESSAGE_STATS = "p>stats <user> - Provides your personal stats. With the optional user argument, a mention, you get the user's stats.";
-    private static final String COMMANDS_MESSAGE_ARTIFACTS = "p>artifacts <user> - Provides a list of your artifacts. With the optional user argument, a mention, you get a list of the user's artifacts.";
-    private static final String COMMANDS_MESSAGE_INFO = "p>info - Provides information on how aspects of the game work.";
+    private static final Response RESPONSE_CURSING = new Response("MESSAGE", "A cursing has occurred.");
+    private static final String COMMANDS_MESSAGE_BLESS = "p>bless <target> <amount> - Grants the target player the given amount of pride. The target argument must be a mention and the amount argument must be a positive integer. Only users with the PrideAdminRole can use this.";
+    private static final String COMMANDS_MESSAGE_CURSE = "p>curse <target> <amount> - Grants the target player the given amount of shame. The target argument must be a mention and the amount argument must be a positive integer. Only users with the PrideAdminRole can use this.";
+    private static final String COMMANDS_MESSAGE_COLLECT = "p>collect - Collect your daily pride or shame. If you currently have more pride, you will collect pride, and vice versa.";
+    private static final String COMMANDS_MESSAGE_STATS = "p>stats <target> - Provides your personal stats. With the optional target argument, a mention, you get the target player's stats.";
+    private static final String COMMANDS_MESSAGE_GAMEINFO = "p>gameinfo - Provides information on how aspects of the game work.";
     private static final String COMMANDS_MESSAGE_COMMANDS = "p>commands - Provides the list of commands.";
-    private static final String COMMANDS_MESSAGE_ATTACK = "p>attack <user> - Initiates combat between you, the attacker, and another user, the defender and provides the result.";
-    private static final String COMMANDS_MESSAGE_BUY = "p>buy <die> <type> - Buy a die at the cost of some pride. The die argument should be formatted as Dn (e.g. D2, D4, etc.). Only standard dice are implemented. The type argument should be ATTACK or DEFENSE for the corresponding type of dice. This commands arguments are not case-sensitive.";
-    private GameInterface gameInterface;
-    private String savePath;
+    private static final String COMMANDS_MESSAGE_BUY = "p>buy <type> <amount> - Purchase one of the given type {ego, guilt, honor, dishonor}. The optional amount argument can be used for some of the types to buy more than one in a single command invocation.";
+    private static final String COMMANDS_MESSAGE_HELP = "p>help - Provides some helpful starting information.";
 
-    public BotModel() {
-        this.gameInterface = new GameInterface();
+    private GameAPI api;
+
+    public BotModel(String savePath) {
+        api = new GameAPI(savePath);
     }
 
-    public void initialize(String path) {
-        savePath = path;
-        gameInterface.load(path);
-    }
-
-    public void save() {
-        gameInterface.save(savePath);
-    }
-
-    public boolean playerExists(String uuid) {
-        return gameInterface.playerExists(uuid);
+    public boolean doesPlayerExist(String uuid) {
+        return api.doesPlayerExist(uuid);
     }
 
     public void addNewPlayer(String uuid) {
-        save(); // save on successful adding of new player
-        gameInterface.addNewPlayer(uuid);
+        api.addNewPlayer(uuid);
     }
 
     public Response process(Command command, boolean isAdmin) {
         // TODO: implement
-        switch (command.getTerm(0)) {
-            case "bless":
+        switch (command.getTerm(0).toUpperCase(Locale.ROOT)) {
+            case "BLESS":
                 if (!isAdmin) {
                     return ERR_NOT_ADMIN;
                 }
                 return bless(command);
-            case "collect":
+            case "CURSE":
+                if (!isAdmin) {
+                    return ERR_NOT_ADMIN;
+                }
+                return curse(command);
+            case "COLLECT":
                 return collect(command);
-            case "levelup":
-                return levelup(command);
-            case "search":
-                return search(command);
-            case "stats":
-                return stats(command);
-            case "artifacts":
-                return artifacts(command);
-            case "attack":
-                return attack(command);
-            case "buy":
+            case "BUY":
                 return buy(command);
-            case "prestige":
-                return prestige(command);
-            case "info":
-                return info(command);
-            case "commands":
+            case "STATS":
+                return stats(command);
+            case "GAMEINFO":
+                return gameinfo(command);
+            case "COMMANDS":
                 return commands(command);
+            case "HELP":
+                return help(command);
             default:
                 return ERR_INVALID_COMMAND;
         }
     }
 
     private Response bless(Command command) {
-        // TODO: add ability to roll for bless
+        // TODO: add ability to roll for amount
         if (command.getSize() < 3) {
             return ERR_MISSING_ARGS;
         }
@@ -91,7 +75,7 @@ public class BotModel {
             return ERR_TOO_MANY_ARGS;
         }
         String targetUUID = extractUUIDFromMention(command.getTerm(1));
-        if (!gameInterface.playerExists(targetUUID)) {
+        if (!api.doesPlayerExist(targetUUID)) {
             return ERR_PLAYER_DNE;
         }
         int pride;
@@ -101,152 +85,174 @@ public class BotModel {
         catch (Exception e) {
             return ERR_INVALID_ARG;
         }
-        gameInterface.addPride(targetUUID, pride);
-        save(); // save on successful bless
+        if (pride < 0) {
+            return new Response("MESSAGE", "Amount must be a positive integer.");
+        }
+        api.bless(targetUUID, pride);
+        api.save(); // save on successful bless
         return RESPONSE_BLESSING;
+    }
+
+    private Response curse(Command command) {
+        // TODO: add ability to roll for amount
+        if (command.getSize() < 3) {
+            return ERR_MISSING_ARGS;
+        }
+        if (command.getSize() > 3) {
+            return ERR_TOO_MANY_ARGS;
+        }
+        String targetUUID = extractUUIDFromMention(command.getTerm(1));
+        if (!api.doesPlayerExist(targetUUID)) {
+            return ERR_PLAYER_DNE;
+        }
+        int shame;
+        try {
+            shame = Integer.parseInt(command.getTerm(2));
+        }
+        catch (Exception e) {
+            return ERR_INVALID_ARG;
+        }
+        if (shame < 0) {
+            return new Response("MESSAGE", "Amount must be a positive integer.");
+        }
+        api.curse(targetUUID, shame);
+        api.save(); // save on successful curse
+        return RESPONSE_CURSING;
     }
 
     private Response collect(Command command) {
         if (command.getSize() > 1) {
             return ERR_TOO_MANY_ARGS;
         }
-        if (gameInterface.collectPride(command.getAuthor().getId())) {
-            save(); // save on successful collect
-            return new Response("MESSAGE", "You have collected your pride.");
+        if (api.collect(command.getAuthor().getId())) {
+            api.save(); // save on successful collect
+            return new Response("MESSAGE", "You have completed your daily collection.");
         }
         else {
-            return new Response("MESSAGE", "You cannot collected your pride.");
+            return new Response("MESSAGE", "You cannot collect at the moment. Try again later.");
         }
-    }
-
-    private Response levelup(Command command) {
-        if (command.getSize() > 2) {
-            return ERR_TOO_MANY_ARGS;
-        }
-        if (command.getSize() == 2) {
-            int levels;
-            try {
-                levels = Integer.parseInt(command.getTerm(1));
-                if (levels <= 0) {
-                    throw new Exception();
-                }
-            }
-            catch (Exception e) {
-                return ERR_INVALID_ARG;
-            }
-            if (gameInterface.levelUpEgo(command.getAuthor().getId(), levels)) {
-                save(); // save on successful level up
-                return RESPONSE_EGO_LEVEL_UP;
-            }
-            else {
-                return ERR_INSUFFICIENT_PRIDE;
-            }
-        }
-        else {
-            if (gameInterface.levelUpEgo(command.getAuthor().getId(), 1)) {
-                save(); // save on successful level up
-                return RESPONSE_EGO_LEVEL_UP;
-            }
-            else {
-                return ERR_INSUFFICIENT_PRIDE;
-            }
-        }
-    }
-
-    private Response search(Command command) {
-        if (command.getSize() > 1) {
-            return ERR_TOO_MANY_ARGS;
-        }
-        if (gameInterface.getPride(command.getAuthor().getId()) < 1) {
-            return ERR_INSUFFICIENT_PRIDE;
-        }
-        String result = gameInterface.searchForArtifact(command.getAuthor().getId());
-        save();
-        return new Response("MESSAGE", result);
-    }
-
-    private Response stats(Command command) {
-        // TODO: update provided stats
-        // TODO: add ability to get another user's stats
-        if (command.getSize() > 1) {
-            return ERR_TOO_MANY_ARGS;
-        }
-        return new Response("MESSAGE",
-                command.getAuthor().getName() +
-                        "\nPride: " + gameInterface.getPride(command.getAuthor().getId()) +
-                        "\nEgo: " + gameInterface.getEgo(command.getAuthor().getId()) +
-                        "\nPrestige: " + gameInterface.getPrestige(command.getAuthor().getId()) +
-                        "\nCost of next ego level: " + gameInterface.prideForNextEgo(command.getAuthor().getId()) + " pride" +
-                        "\nCost of next prestige: " + gameInterface.egoForNextPrestige(command.getAuthor().getId()) + " ego" +
-                "\"");
-    }
-
-    private Response artifacts(Command command) {
-        // TODO: add ability to get list of another user's artifacts
-        if (command.getSize() > 1) {
-            return ERR_TOO_MANY_ARGS;
-        }
-        String result = gameInterface.getPlayerArtifacts(command.getAuthor().getId());
-        return new Response("MESSAGE", result);
-    }
-
-    private Response attack(Command command) {
-        if (!gameInterface.hasCombatModule(command.getAuthor().getId())) {
-            return new Response("ERROR", "You do not have the combat module.");
-        }
-        String targetUUID = extractUUIDFromMention(command.getTerm(1));
-        if (!gameInterface.playerExists(targetUUID)) {
-            return ERR_PLAYER_DNE;
-        }
-        if (!gameInterface.hasCombatModule(targetUUID)) {
-            return new Response("ERROR", "Target player does not have combat module.");
-        }
-        String result = gameInterface.simulateCombat(command.getAuthor().getId(), targetUUID);
-        return new Response("MESSAGE", result);
     }
 
     private Response buy(Command command) {
-        if (!gameInterface.hasCombatModule(command.getAuthor().getId())) {
-            return new Response("ERROR", "You do not have the combat module.");
+        if (command.getSize() < 2) {
+            return ERR_MISSING_ARGS;
         }
-        String result = gameInterface.buyDie(command.getAuthor().getId(), command.getTerm(1), command.getTerm(2));
-        return new Response("MESSAGE", result);
-    }
-
-    private Response prestige(Command command) {
-        if (command.getSize() > 1) {
+        if (command.getSize() > 3) {
             return ERR_TOO_MANY_ARGS;
         }
-        String result = gameInterface.levelUpPrestige(command.getAuthor().getId());
-        return new Response("MESSAGE", result);
+        switch (command.getTerm(1).toUpperCase(Locale.ROOT)) {
+            case "EGO":
+                return buyEgo(command.getAuthor().getId(), 1);
+            case "GUILT":
+                return buyGuilt(command.getAuthor().getId(), 1);
+            case "HONOR":
+                if (command.getSize() > 2) {
+                    return ERR_TOO_MANY_ARGS;
+                }
+                return buyHonor(command.getAuthor().getId());
+            case "DISHONOR":
+                if (command.getSize() > 2) {
+                    return ERR_TOO_MANY_ARGS;
+                }
+                return buyDishonor(command.getAuthor().getId());
+            default:
+                return ERR_INVALID_ARG;
+        }
     }
 
-    private Response info(Command command) {
-        // TODO: add all of the game info
-        return new Response("MESSAGE",
-                "Info: " +
-                        "\n\tPride - The atomic value of the game." +
-                        "\n\tEgo - Can be traded for using pride. One ego costs ((current_ego + 1) * 10) pride." +
-                        "\n\tDaily Pride - The amount of pride you gain from the collect command, once per day. It is equal to ego + c, where c is buffs from your artifacts. Crits only double c and not ego + c." +
-                        "\n\tArtifact - A rare object you have found with mystical powers. Grants buffs to daily pride collection." +
-                        "\n\tPrestige - Prestige grants access to new features. It costs all of your ego and a minimum amount of ego to level up."
+    private Response buyEgo(String uuid, int amount) {
+        int i = 0;
+        while (i < amount && api.buyEgo(uuid)) {
+            i++;
+        }
+        if (i == 0) {
+            return new Response("MESSAGE", "You can not afford to buy ego");
+        }
+        return new Response("MESSAGE", "You have bought " + i + " ego");
+    }
+
+    private Response buyGuilt(String uuid, int amount) {
+        int i = 0;
+        while (i < amount && api.buyGuilt(uuid)) {
+            i++;
+        }
+        if (i == 0) {
+            return new Response("MESSAGE", "You can not afford to buy guilt");
+        }
+        return new Response("MESSAGE", "You have bought " + i + " guilt");
+    }
+
+    private Response buyHonor(String uuid) {
+        if (api.buyHonor(uuid)) {
+            return new Response("MESSAGE", "You can not afford to buy honor");
+        }
+        return new Response("MESSAGE", "You bought 1 honor");
+    }
+
+    private Response buyDishonor(String uuid) {
+        if (api.buyDishonor(uuid)) {
+            return new Response("MESSAGE", "You can not afford to buy dishonor");
+        }
+        return new Response("MESSAGE", "You bought 1 dishonor");
+    }
+
+    private Response stats(Command command) {
+        if (command.getSize() > 2) {
+            return ERR_TOO_MANY_ARGS;
+        }
+        String uuid;
+        if (command.getSize() == 2) {
+            uuid = extractUUIDFromMention(command.getTerm(1));
+        }
+        else {
+            uuid = command.getAuthor().getId();
+        }
+        return new Response("MESSAGE", "Stats:" +
+                "\n\tPride: " + api.getPride(uuid) +
+                "\n\tShame: " + api.getShame(uuid) +
+                "\n\tEgo: " + api.getEgo(uuid) +
+                "\n\tGuilt: " + api.getGuilt(uuid) +
+                "\n\tHonor: " + api.getHonor(uuid) +
+                "\n\tDishonor: " + api.getDishonor(uuid)
+        );
+    }
+
+    private Response gameinfo(Command command) {
+        return new Response("MESSAGE", "Info:" +
+                "\n\tPride and Shame:" +
+                "\n\t\tThe two atomic values of the game." +
+                "\n\t\tEffectively a currency." +
+                "\n\tEgo and Guilt:" +
+                "\n\t\tEach can be bought with pride and shame respectively." +
+                "\n\t\tCost is equal to 1 more than the current amount times 10 (e.g. cost_of_next_ego = (ego + 1) * 10)." +
+                "\n\t\tEach increase their respective collection amounts by their value (e.g. pride_per_collection = 1 + ego)" +
+                "\n\tHonor and Dishonor:" +
+                "\n\t\t[CURRENTLY DO NOTHING]" +
+                "\n\t\tAs you gain levels of these, you gain access to various game features." +
+                "\n\t\tSpecifically, your feature access level is equal to the greatest of the two values."
         );
     }
 
     private Response commands(Command command) {
-        return new Response("MESSAGE",
-                "Commands: " +
-                        "\n\t" + COMMANDS_MESSAGE_STATS +
-                        "\n\t" + COMMANDS_MESSAGE_BLESS +
-                        "\n\t" + COMMANDS_MESSAGE_COLLECT +
-                        "\n\t" + COMMANDS_MESSAGE_LEVELUP +
-                        "\n\t" + COMMANDS_MESSAGE_PRESTIGE +
-                        "\n\t" + COMMANDS_MESSAGE_SEARCH +
-                        "\n\t" + COMMANDS_MESSAGE_ARTIFACTS +
-                        "\n\t" + COMMANDS_MESSAGE_ATTACK +
-                        "\n\t" + COMMANDS_MESSAGE_BUY +
-                        "\n\t" + COMMANDS_MESSAGE_INFO +
-                        "\n\t" + COMMANDS_MESSAGE_COMMANDS
+        return new Response("MESSAGE", "Commands:" +
+                "\n\t" + COMMANDS_MESSAGE_BLESS +
+                "\n\t" + COMMANDS_MESSAGE_CURSE +
+                "\n\t" + COMMANDS_MESSAGE_COLLECT +
+                "\n\t" + COMMANDS_MESSAGE_BUY +
+                "\n\t" + COMMANDS_MESSAGE_STATS +
+                "\n\t" + COMMANDS_MESSAGE_GAMEINFO +
+                "\n\t" + COMMANDS_MESSAGE_COMMANDS +
+                "\n\t" + COMMANDS_MESSAGE_HELP
+        );
+    }
+
+    private Response help(Command command) {
+        return new Response("MESSAGE", "Help:" +
+                "\n\tAll commands use the p> prefix. This prefix is case-sensitive." +
+                "\n\tCommand names and arguments are not case-sensitive." +
+                "\n\tUse p>commands to get the list of commands." +
+                "\n\tThe p>bless and p>curse commands can only be used by Discord users with a role name PrideBotAdmin. The only requirement for the role is the name." +
+                "\n\tIf the bot does not respond to a command, it means an exception was thrown. This means I have an issue in my code, so feel free to let me know so I can fix it."
         );
     }
 

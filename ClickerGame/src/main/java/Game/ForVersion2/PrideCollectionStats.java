@@ -1,35 +1,35 @@
-package Game;
+package Game.ForVersion2;
 
-public class Stats {
+public class PrideCollectionStats {
     protected final long PRIDE_PER_COLLECTION;
     protected final double COLLECTION_CRIT_PROBABILITY;
 
-    protected Stats() {
+    protected PrideCollectionStats() {
         // for Jackson
         this.PRIDE_PER_COLLECTION = 0;
         this.COLLECTION_CRIT_PROBABILITY = 0;
     }
 
-    protected Stats(long pridePerCollection) {
+    protected PrideCollectionStats(long pridePerCollection) {
         this.PRIDE_PER_COLLECTION = pridePerCollection;
         this.COLLECTION_CRIT_PROBABILITY = 0;
     }
 
-    protected Stats(long pridePerCollection, double collectionCritProbability) {
+    protected PrideCollectionStats(long pridePerCollection, double collectionCritProbability) {
         this.PRIDE_PER_COLLECTION = pridePerCollection;
         this.COLLECTION_CRIT_PROBABILITY = collectionCritProbability;
     }
 
-    protected Stats add(Stats other) {
-        return new Stats(
+    protected PrideCollectionStats add(PrideCollectionStats other) {
+        return new PrideCollectionStats(
                 PRIDE_PER_COLLECTION + other.PRIDE_PER_COLLECTION,
                 COLLECTION_CRIT_PROBABILITY + other.COLLECTION_CRIT_PROBABILITY
         );
     }
 
     @Override
-    public Stats clone() {
-        return new Stats(PRIDE_PER_COLLECTION, COLLECTION_CRIT_PROBABILITY);
+    public PrideCollectionStats clone() {
+        return new PrideCollectionStats(PRIDE_PER_COLLECTION, COLLECTION_CRIT_PROBABILITY);
     }
 
     @Override

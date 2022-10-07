@@ -1,4 +1,4 @@
-package Game;
+package Game.ForVersion2;
 
 public class CombatItemMerchant {
     protected static final int D2_PRIDE_COST = 3;

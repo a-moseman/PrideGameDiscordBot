@@ -1,5 +1,7 @@
-package Game;
+package Game.ForVersion2;
 
+
+import Game.Player;
 
 public class CombatSimulator {
     protected static long simulate (Player attacker, Player defender) {
@@ -13,11 +15,14 @@ public class CombatSimulator {
             5. If the result is negative, no pride is exchanged.
             Note: features will be implemented that may change this procedure in the future.
          */
+        /*
         Dice attackerAttackDice = attacker.getCombatStats().getAttackDice();
         Dice defenderDefenseDice = defender.getCombatStats().getDefenseDice();
         long attackRoll = attackerAttackDice.roll();
         long defenseRoll = defenderDefenseDice.roll();
         long result = attackRoll - defenseRoll;
         return Math.max(0, result);
+         */
+        return 0;
     }
 }
