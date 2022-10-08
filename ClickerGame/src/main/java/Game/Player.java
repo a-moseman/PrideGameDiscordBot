@@ -76,13 +76,13 @@ public class Player {
             if (stats.getEgo() > stats.getGuilt()) {
                 return 1;
             } else {
-                return 0;
+                return -1;
             }
         }
         if (stats.getHonor() > stats.getDishonor()) {
             return 1;
         } else {
-            return 0;
+            return -1;
         }
     }
 
