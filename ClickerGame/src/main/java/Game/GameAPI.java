@@ -8,21 +8,20 @@ package Game;
 public class GameAPI {
     private final String SAVE_DATA_PATH;
     private GameModel gameModel;
+    private PersistenceManager persistenceManager;
 
     public GameAPI(String saveDataPath) {
         this.SAVE_DATA_PATH = saveDataPath;
-    }
-
-    private void load() {
-        gameModel = new GameModel();
-        // TODO: implement loading
+        this.gameModel = new GameModel();
+        this.persistenceManager = new PersistenceManager(saveDataPath, gameModel);
+        persistenceManager.load();
     }
 
     /**
      * Save the game.
      */
     public void save() {
-        // TODO: implement
+        persistenceManager.save();
     }
 
     /**

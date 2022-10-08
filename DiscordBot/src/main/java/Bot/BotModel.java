@@ -13,8 +13,8 @@ public class BotModel {
     private static final Response ERR_PLAYER_DNE = new Response("ERROR",  "Player does not exist.");
     private static final Response RESPONSE_BLESSING = new Response("MESSAGE", "A blessing has occurred.");
     private static final Response RESPONSE_CURSING = new Response("MESSAGE", "A cursing has occurred.");
-    private static final String COMMANDS_MESSAGE_BLESS = "p>bless <target> <amount> - Grants the target player the given amount of pride. The target argument must be a mention and the amount argument must be a positive integer. Only users with the PrideAdminRole can use this.";
-    private static final String COMMANDS_MESSAGE_CURSE = "p>curse <target> <amount> - Grants the target player the given amount of shame. The target argument must be a mention and the amount argument must be a positive integer. Only users with the PrideAdminRole can use this.";
+    private static final String COMMANDS_MESSAGE_BLESS = "p>bless <target> <amount> - Grants the target player the given amount of pride. The target argument must be a mention and the amount argument must be a positive integer. (pride_dm only)";
+    private static final String COMMANDS_MESSAGE_CURSE = "p>curse <target> <amount> - Grants the target player the given amount of shame. The target argument must be a mention and the amount argument must be a positive integer. (pride_dm only)";
     private static final String COMMANDS_MESSAGE_COLLECT = "p>collect - Collect your daily pride or shame. If you currently have more pride, you will collect pride, and vice versa.";
     private static final String COMMANDS_MESSAGE_STATS = "p>stats <target> - Provides your personal stats. With the optional target argument, a mention, you get the target player's stats.";
     private static final String COMMANDS_MESSAGE_GAMEINFO = "p>gameinfo - Provides information on how aspects of the game work.";
@@ -26,9 +26,21 @@ public class BotModel {
     private GameAPI api;
     private final long START_TIME;
 
+    private int AUTO_SAVE_RATE_IN_MINUTES = 45;
+    private long lastSaveTime;
+
     public BotModel(String savePath) {
         this.START_TIME = System.currentTimeMillis();
+        this.lastSaveTime = System.currentTimeMillis();
         this.api = new GameAPI(savePath);
+    }
+
+    public void save() {
+        if ((double) (System.currentTimeMillis() - lastSaveTime) / 1000 / 60 >= AUTO_SAVE_RATE_IN_MINUTES) {
+            api.save();
+            lastSaveTime = System.currentTimeMillis();
+            System.out.println("SAVED"); //TODO: DEBUG
+        }
     }
 
     public boolean doesPlayerExist(String uuid) {
@@ -40,7 +52,6 @@ public class BotModel {
     }
 
     public Response process(Command command, boolean isAdmin) {
-        // TODO: implement
         switch (command.getTerm(0).toUpperCase(Locale.ROOT)) {
             case "BLESS":
                 if (!isAdmin) {
@@ -94,7 +105,6 @@ public class BotModel {
             return new Response("MESSAGE", "Amount must be a positive integer.");
         }
         api.bless(targetUUID, pride);
-        api.save(); // save on successful bless
         return RESPONSE_BLESSING;
     }
 
@@ -121,7 +131,6 @@ public class BotModel {
             return new Response("MESSAGE", "Amount must be a positive integer.");
         }
         api.curse(targetUUID, shame);
-        api.save(); // save on successful curse
         return RESPONSE_CURSING;
     }
 
@@ -130,7 +139,6 @@ public class BotModel {
             return ERR_TOO_MANY_ARGS;
         }
         if (api.collect(command.getAuthor().getId())) {
-            api.save(); // save on successful collect
             return new Response("MESSAGE", "You have completed your daily collection.");
         }
         else {
@@ -189,16 +197,16 @@ public class BotModel {
 
     private Response buyHonor(String uuid) {
         if (api.buyHonor(uuid)) {
-            return new Response("MESSAGE", "You can not afford to buy honor");
+            return new Response("MESSAGE", "You bought 1 honor");
         }
-        return new Response("MESSAGE", "You bought 1 honor");
+        return new Response("MESSAGE", "You can not afford to buy honor");
     }
 
     private Response buyDishonor(String uuid) {
         if (api.buyDishonor(uuid)) {
-            return new Response("MESSAGE", "You can not afford to buy dishonor");
+            return new Response("MESSAGE", "You bought 1 dishonor");
         }
-        return new Response("MESSAGE", "You bought 1 dishonor");
+        return new Response("MESSAGE", "You can not afford to buy dishonor");
     }
 
     private Response stats(Command command) {
@@ -270,7 +278,7 @@ public class BotModel {
                 "\n\tAll commands use the p> prefix. This prefix is case-sensitive." +
                 "\n\tCommand names and arguments are not case-sensitive." +
                 "\n\tUse p>commands to get the list of commands." +
-                "\n\tThe p>bless and p>curse commands can only be used by Discord users with a role name PrideBotAdmin. The only requirement for the role is the name." +
+                "\n\tThe p>bless and p>curse commands can only be used by Discord users with a role name pride_dm. The only requirement for the role is the name." +
                 "\n\tIf the bot does not respond to a command, it means an exception was thrown. This means I have an issue in my code, so feel free to let me know so I can fix it."
         );
     }

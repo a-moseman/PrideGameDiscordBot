@@ -2,8 +2,10 @@ package Bot;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,8 +24,12 @@ public class BotListener extends ListenerAdapter {
     }
 
     private boolean isPrideBotAdmin(User user) {
-        guild.loadMembers(); // TODO: check is needed
-        List<Member> admins = guild.getMembersWithRoles(guild.getRolesByName("PrideBotAdmin", false));
+        guild.loadMembers(); // load the members of the guild into the cache
+        List<Role> roles = guild.getRolesByName("pride_dm", false);
+        if (roles.size() == 0) { // guild does not have pride_dm role
+            return false;
+        }
+        List<Member> admins = guild.getMembersWithRoles(roles);
         for (Member member : admins) {
             if (user.getId().equals(member.getId())) {
                 return true;
@@ -56,8 +62,13 @@ public class BotListener extends ListenerAdapter {
         if (response.TARGET_UUID != null) {
             channel.sendMessage("<@" + response.TARGET_UUID + "> \n" + response.MESSAGES[0]).queue();
         }
-        for (int i = 1; i < response.MESSAGES.length; i++) {
+        for (int i = 0; i < response.MESSAGES.length; i++) {
             channel.sendMessage(response.MESSAGES[i]).queue();
         }
+    }
+
+    @Override
+    public void onGenericEvent(@NotNull GenericEvent event) {
+        botModel.save();
     }
 }

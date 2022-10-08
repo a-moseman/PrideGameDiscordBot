@@ -1,5 +1,9 @@
 package Game;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
  * Finished for version 1.
  */
@@ -118,5 +122,16 @@ public class PlayerStats {
 
     protected long getDishonor() {
         return dishonor;
+    }
+
+    protected ObjectNode buildObjectNode(ObjectMapper mapper) {
+        ObjectNode node = mapper.createObjectNode();
+        node.set("pride", mapper.convertValue(pride, JsonNode.class));
+        node.set("shame", mapper.convertValue(shame, JsonNode.class));
+        node.set("ego", mapper.convertValue(ego, JsonNode.class));
+        node.set("guilt", mapper.convertValue(guilt, JsonNode.class));
+        node.set("honor", mapper.convertValue(honor, JsonNode.class));
+        node.set("dishonor", mapper.convertValue(dishonor, JsonNode.class));
+        return node;
     }
 }

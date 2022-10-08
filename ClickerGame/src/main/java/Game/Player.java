@@ -1,18 +1,26 @@
 package Game;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
  * Finished for version 1.
  */
 public class Player {
+    protected final String UUID;
     private PlayerStats stats;
     private long lastCollectionTime;
 
-    protected Player() {
+    protected Player(String uuid) {
+        this.UUID = uuid;
         this.stats = new PlayerStats();
-        this.lastCollectionTime = System.currentTimeMillis();
+        //this.lastCollectionTime = System.currentTimeMillis();
+        this.lastCollectionTime = 0;
     }
 
-    protected Player(PlayerStats playerStats, long lastCollectionTime) {
+    protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime) {
+        this.UUID = uuid;
         this.stats = playerStats;
         this.lastCollectionTime = lastCollectionTime;
     }
@@ -54,14 +62,27 @@ public class Player {
     }
 
     protected int currentAffinity() {
-        if (stats.getPride() == stats.getShame()) {
-            return 0;
+        if (stats.getHonor() == stats.getDishonor()) {
+            if (stats.getEgo() == stats.getGuilt()) {
+                if (stats.getPride() == stats.getShame()) {
+                    return 0;
+                }
+                if (stats.getPride() > stats.getShame()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+            if (stats.getEgo() > stats.getGuilt()) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
-        if (stats.getPride() > stats.getShame()) {
+        if (stats.getHonor() > stats.getDishonor()) {
             return 1;
-        }
-        else {
-            return -1;
+        } else {
+            return 0;
         }
     }
 
@@ -71,5 +92,13 @@ public class Player {
 
     protected long getLastCollectionTime() {
         return lastCollectionTime;
+    }
+
+    protected ObjectNode buildJsonNode(ObjectMapper mapper) {
+        ObjectNode node = mapper.createObjectNode();
+        node.set("uuid", mapper.convertValue(UUID, JsonNode.class));
+        node.set("last_collection_time", mapper.convertValue(lastCollectionTime, JsonNode.class));
+        node.set("stats", stats.buildObjectNode(mapper));
+        return node;
     }
 }
