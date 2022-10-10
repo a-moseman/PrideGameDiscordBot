@@ -1,5 +1,9 @@
 package SpellBook;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public class SpellEffect {
     protected final double COLLECTION_CRIT_CHANCE; // probability amount of pride or shame gained on collection will be doubled
     protected final boolean PRIDE_FAVORED; // forces collection to give pride
@@ -41,5 +45,14 @@ public class SpellEffect {
                 shameFavored,
                 bountifulness
         );
+    }
+
+    protected ObjectNode buildJsonNode(ObjectMapper mapper) {
+        ObjectNode node = mapper.createObjectNode();;
+        node.set("collection_crit_chance", mapper.convertValue(COLLECTION_CRIT_CHANCE, JsonNode.class));
+        node.set("pride_favored", mapper.convertValue(PRIDE_FAVORED, JsonNode.class));
+        node.set("shame_favored", mapper.convertValue(SHAME_FAVORED, JsonNode.class));
+        node.set("bountifulness", mapper.convertValue(BOUNTIFULNESS, JsonNode.class));
+        return node;
     }
 }

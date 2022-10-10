@@ -16,6 +16,12 @@ public class Player {
 
     private SpellBookModule spellBookModule;
 
+    private void retroactivelyAddModules() {
+        if (stats.getLevel() > 0 && spellBookModule == null) {
+            spellBookModule = new SpellBookModule();
+        }
+    }
+
     /**
      * Instantiate a new player.
      * @param uuid
@@ -25,6 +31,7 @@ public class Player {
         this.stats = new PlayerStats();
         this.lastCollectionTime = 0;
         this.spellBookModule = null;
+        retroactivelyAddModules();
     }
 
     /**
@@ -38,6 +45,7 @@ public class Player {
         this.stats = playerStats;
         this.lastCollectionTime = lastCollectionTime;
         this.spellBookModule = null;
+        retroactivelyAddModules();
     }
 
     /**
@@ -51,6 +59,7 @@ public class Player {
         this.stats = playerStats;
         this.lastCollectionTime = lastCollectionTime;
         this.spellBookModule = spellBookModule;
+        retroactivelyAddModules();
     }
 
     protected boolean buySpell() {
@@ -168,6 +177,7 @@ public class Player {
         node.set("uuid", mapper.convertValue(UUID, JsonNode.class));
         node.set("last_collection_time", mapper.convertValue(lastCollectionTime, JsonNode.class));
         node.set("stats", stats.buildObjectNode(mapper));
+        node.set("spell_book", spellBookModule.buildJsonNode(mapper));
         return node;
     }
 }

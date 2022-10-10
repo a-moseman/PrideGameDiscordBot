@@ -1,5 +1,8 @@
 package SpellBook;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import java.util.ArrayList;
 
 public class SpellBook {
@@ -42,5 +45,13 @@ public class SpellBook {
 
     protected SpellEffect getCurrentSpellEffect() {
         return currentSpellEffect;
+    }
+
+    protected ArrayNode buildJsonNode(ObjectMapper mapper) {
+        ArrayNode node = mapper.createArrayNode();
+        for (Spell spell : spells) {
+            node.add(spell.buildJsonNode(mapper));
+        }
+        return node;
     }
 }

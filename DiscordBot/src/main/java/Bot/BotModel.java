@@ -261,7 +261,7 @@ public class BotModel {
     private Response botinfo(Command command) {
         return new Response("MESSAGE", "Bot Info:" +
                 "\n\tUptime: " + getUptime() + " days" +
-                "\n\tVersion: v1.0" +
+                "\n\tVersion: v2.0" +
                 "\n\tDeveloper: Glyphical" +
                 "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot"
         );
