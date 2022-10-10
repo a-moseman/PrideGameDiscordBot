@@ -168,6 +168,11 @@ public class BotModel {
                     return ERR_TOO_MANY_ARGS;
                 }
                 return buyDishonor(command.getAuthor().getId());
+            case "SPELL":
+                if (command.getSize() > 2) {
+                    return ERR_TOO_MANY_ARGS;
+                }
+                return buySpell(command.getAuthor().getId());
             default:
                 return ERR_INVALID_ARG;
         }
@@ -207,6 +212,13 @@ public class BotModel {
             return new Response("MESSAGE", "You bought 1 dishonor");
         }
         return new Response("MESSAGE", "You can not afford to buy dishonor");
+    }
+
+    private Response buySpell(String uuid) {
+        if (api.buySpell(uuid)) {
+            return new Response("MESSAGE", "You bought 1 spell.");
+        }
+        return new Response("MESSAGE", "You failed.");
     }
 
     private Response stats(Command command) {

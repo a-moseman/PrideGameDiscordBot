@@ -9,6 +9,10 @@ public class Util {
         return (double) milliseconds / 1000 / 60 / 60 / 24;
     }
 
+    protected static double randomDouble() {
+        return RANDOM.nextDouble();
+    }
+
     protected static boolean randomBoolean() {
         return RANDOM.nextBoolean();
     }

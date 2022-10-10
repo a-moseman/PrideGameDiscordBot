@@ -1,5 +1,7 @@
 package Game;
 
+import SpellBook.Spell;
+import SpellBook.SpellBookModule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,17 +14,88 @@ public class Player {
     private PlayerStats stats;
     private long lastCollectionTime;
 
+    private SpellBookModule spellBookModule;
+
+    /**
+     * Instantiate a new player.
+     * @param uuid
+     */
     protected Player(String uuid) {
         this.UUID = uuid;
         this.stats = new PlayerStats();
-        //this.lastCollectionTime = System.currentTimeMillis();
         this.lastCollectionTime = 0;
+        this.spellBookModule = null;
     }
 
+    /**
+     * Instantiate a level 0 player.
+     * @param uuid
+     * @param playerStats
+     * @param lastCollectionTime
+     */
     protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime) {
         this.UUID = uuid;
         this.stats = playerStats;
         this.lastCollectionTime = lastCollectionTime;
+        this.spellBookModule = null;
+    }
+
+    /**
+     * Instantiate a level 1 player.
+     * @param uuid
+     * @param playerStats
+     * @param lastCollectionTime
+     */
+    protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime, SpellBookModule spellBookModule) {
+        this.UUID = uuid;
+        this.stats = playerStats;
+        this.lastCollectionTime = lastCollectionTime;
+        this.spellBookModule = spellBookModule;
+    }
+
+    protected boolean buySpell() {
+        if (spellBookModule == null) {
+            return false;
+        }
+
+        if (stats.getPride() == stats.getShame()) {
+            if (Util.randomBoolean()) { // pride
+                return buySpellWithPride();
+            }
+            else { // shame
+                return buySpellWithShame();
+            }
+        }
+        else if (stats.getPride() > stats.getShame()) {
+            return buySpellWithPride();
+        }
+        else {
+            return buySpellWithShame();
+        }
+    }
+
+    private boolean buySpellWithPride() {
+        if (stats.getPride() >= SpellBookModule.SPELL_COST) {
+            Spell spell = spellBookModule.generateSpell();
+            if (spell != null) {
+                spellBookModule.addSpell(spell);
+                stats.addPride(-SpellBookModule.SPELL_COST);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean buySpellWithShame() {
+        if (stats.getShame() >= SpellBookModule.SPELL_COST) {
+            Spell spell = spellBookModule.generateSpell();
+            if (spell != null) {
+                spellBookModule.addSpell(spell);
+                stats.addShame(-SpellBookModule.SPELL_COST);
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean collect() {
@@ -88,10 +161,6 @@ public class Player {
 
     protected PlayerStats getStats() {
         return stats;
-    }
-
-    protected long getLastCollectionTime() {
-        return lastCollectionTime;
     }
 
     protected ObjectNode buildJsonNode(ObjectMapper mapper) {

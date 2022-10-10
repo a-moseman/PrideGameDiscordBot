@@ -94,12 +94,22 @@ public class GameAPI {
     }
 
     /**
+     * Exchange 2 of a player's pride for a chance to get a spell.
+     * @param uuid The UUID of the player.
+     * @return boolean Whether or not they can afford it or they don't have the module.
+     */
+    public boolean buySpell(String uuid) {
+        return gameModel.getPlayer(uuid).buySpell();
+    }
+
+    /**
      * Add a new player to the game.
      * @param uuid The UUID of the new player.
      */
     public void addNewPlayer(String uuid) {
         gameModel.addNewPlayer(uuid);
     }
+
 
 
     //___GETTERS___\\
