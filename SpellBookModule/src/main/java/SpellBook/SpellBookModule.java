@@ -3,6 +3,8 @@ package SpellBook;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
+
 public class SpellBookModule {
     public static final long SPELL_COST = 2;
 
@@ -12,8 +14,37 @@ public class SpellBookModule {
         this.spellBook = new SpellBook();
     }
 
-    public Spell generateSpell() {
+    public SpellBookModule(
+            ArrayList<Spell> spells,
+            double collectionCritChance,
+            boolean prideFavored,
+            boolean shameFavored,
+            long bountifulness) {
+        this.spellBook = new SpellBook(spells, new SpellEffect(
+                collectionCritChance,
+                prideFavored,
+                shameFavored,
+                bountifulness
+        ));
+    }
+
+    public static Spell generateSpell() {
         return SpellGenerator.get();
+    }
+
+    public static Spell generateSpell(String name, int level) {
+        switch (name) {
+            case "Empower":
+                return new EmpowerSpell(level);
+            case "Luxuriate":
+                return new LuxuriateSpell(level);
+            case "Illuminate":
+                return new IlluminateSpell();
+            case "Extinguish":
+                return new ExtinguishSpell();
+            default:
+                return null;
+        }
     }
 
     public void addSpell(Spell spell) {

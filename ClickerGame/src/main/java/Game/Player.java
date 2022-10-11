@@ -177,7 +177,12 @@ public class Player {
         node.set("uuid", mapper.convertValue(UUID, JsonNode.class));
         node.set("last_collection_time", mapper.convertValue(lastCollectionTime, JsonNode.class));
         node.set("stats", stats.buildObjectNode(mapper));
-        node.set("spell_book", spellBookModule.buildJsonNode(mapper));
+        if (spellBookModule == null) {
+            node.set("spell_book", null);
+        }
+        else {
+            node.set("spell_book", spellBookModule.buildJsonNode(mapper));
+        }
         return node;
     }
 }
