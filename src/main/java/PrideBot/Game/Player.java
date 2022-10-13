@@ -145,11 +145,25 @@ public class Player {
     }
 
     private void collectDailyPride() {
-        stats.addPride(1 + stats.getEgo());
+        long amount = 1 + stats.getEgo();
+        if (hasSpellBookModule()) {
+            amount += spellBookModule.getBountifullness();
+            if (Util.randomDouble() < spellBookModule.getCritChance()) {
+                amount *= 2;
+            }
+        }
+        stats.addPride(amount);
     }
 
     private void collectDailyShame() {
-        stats.addShame(1 + stats.getGuilt());
+        long amount = 1 + stats.getGuilt();
+        if (hasSpellBookModule()) {
+            amount += spellBookModule.getBountifullness();
+            if (Util.randomDouble() < spellBookModule.getCritChance()) {
+                amount *= 2;
+            }
+        }
+        stats.addShame(amount);
     }
 
     protected int currentAffinity() {
