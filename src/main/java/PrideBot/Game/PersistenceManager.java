@@ -1,5 +1,6 @@
 package PrideBot.Game;
 
+import PrideBot.Game.SaveDataTranslators.Translate1_0To2_0;
 import PrideBot.SpellBook.Spell;
 import PrideBot.SpellBook.SpellBookModule;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,12 +12,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PersistenceManager {
+    private final String VERSION = "[2.0]";
+
     private final String PATH;
     private GameModel gameModel;
 
     protected PersistenceManager(String path, GameModel gameModel) {
         this.PATH = path;
         this.gameModel = gameModel;
+    }
+
+    private String extractFileVersion(String fileName) {
+        return fileName.split(" ")[0];
     }
 
     protected void load() {
@@ -31,7 +38,15 @@ public class PersistenceManager {
                 e.printStackTrace();
                 return;
             }
-            loadPlayers(root);
+            String version = extractFileVersion(file.getName());
+            ObjectNode translatedData = root.deepCopy();
+            if (version.equals("[1.0]")) {
+                if (VERSION.equals("[2.0]")) {
+                    translatedData = Translate1_0To2_0.convert(mapper, root);
+                }
+            }
+
+            loadPlayers(mapper.convertValue(translatedData, JsonNode.class));
         }
     }
 
