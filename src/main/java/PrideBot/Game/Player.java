@@ -18,7 +18,7 @@ public class Player {
 
     /**
      * Instantiate a new player.
-     * @param uuid
+     * @param uuid The UUID of the player.
      */
     protected Player(String uuid) {
         this.UUID = uuid;
@@ -30,9 +30,9 @@ public class Player {
 
     /**
      * Instantiate a level 0 player.
-     * @param uuid
-     * @param playerStats
-     * @param lastCollectionTime
+     * @param uuid The UUID of the player.
+     * @param playerStats The player's stats.
+     * @param lastCollectionTime The last time the player collected.
      */
     protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime) {
         this.UUID = uuid;
@@ -44,9 +44,10 @@ public class Player {
 
     /**
      * Instantiate a level 1 player.
-     * @param uuid
-     * @param playerStats
-     * @param lastCollectionTime
+     * @param uuid The UUID of the player.
+     * @param playerStats The player's stats.
+     * @param lastCollectionTime The last time the player collected.
+     * @param spellBookModule The spell book module of the player.
      */
     protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime, SpellBookModule spellBookModule) {
         this.UUID = uuid;
@@ -85,7 +86,7 @@ public class Player {
 
     private boolean buySpellWithPride() {
         if (stats.getPride() >= SpellBookModule.SPELL_COST) {
-            Spell spell = spellBookModule.generateSpell();
+            Spell spell = SpellBookModule.generateSpell();
             if (spell != null) {
                 spellBookModule.addSpell(spell);
                 stats.addPride(-SpellBookModule.SPELL_COST);
@@ -97,7 +98,7 @@ public class Player {
 
     private boolean buySpellWithShame() {
         if (stats.getShame() >= SpellBookModule.SPELL_COST) {
-            Spell spell = spellBookModule.generateSpell();
+            Spell spell = SpellBookModule.generateSpell();
             if (spell != null) {
                 spellBookModule.addSpell(spell);
                 stats.addShame(-SpellBookModule.SPELL_COST);
@@ -118,21 +119,20 @@ public class Player {
                 }
             }
 
-            switch (currentAffinity()) {
-                case 0:
-                    if (Util.randomBoolean()) {
-                        collectDailyPride();
-                    }
-                    else {
-                        collectDailyShame();
-                    }
-                    break;
-                case 1: // pride affinity
+            int currentAffinity = currentAffinity();
+            if (currentAffinity == 0) {
+                if (Util.randomBoolean()) {
                     collectDailyPride();
-                    break;
-                case -1: // shame affinity
+                }
+                else {
                     collectDailyShame();
-                    break;
+                }
+            }
+            else if (currentAffinity > 0) {
+                collectDailyPride();
+            }
+            else {
+                collectDailyShame();
             }
             lastCollectionTime = System.currentTimeMillis();
             return true;
@@ -169,14 +169,7 @@ public class Player {
     protected int currentAffinity() {
         if (stats.getHonor() == stats.getDishonor()) {
             if (stats.getEgo() == stats.getGuilt()) {
-                if (stats.getPride() == stats.getShame()) {
-                    return 0;
-                }
-                if (stats.getPride() > stats.getShame()) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+                return Long.compare(stats.getPride(), stats.getShame());
             }
             if (stats.getEgo() > stats.getGuilt()) {
                 return 1;
