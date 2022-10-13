@@ -7,15 +7,23 @@
     <groupId>org.amoseman</groupId>
     <artifactId>PrideGameDiscordBot</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
-    <modules>
-        <module>ClickerGame</module>
-        <module>DiscordBot</module>
-        <module>SpellBookModule</module>
-    </modules>
+    <version>2.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-alpha.21</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.14.0-rc2</version>
+        </dependency>
+    </dependencies>
 </project>
