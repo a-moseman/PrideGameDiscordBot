@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PersistenceManager {
-    private final String VERSION = "[2.0]";
+    private final String V1_0 = "[1.0]";
+    private final String V2_0 = "[2.0]";
+
+    private final String VTHIS = V2_0;
 
     private final String PATH;
     private GameModel gameModel;
@@ -22,12 +25,8 @@ public class PersistenceManager {
         this.gameModel = gameModel;
     }
 
-    private String extractFileVersion(String fileName) {
-        return fileName.split(" ")[0];
-    }
-
     protected void load() {
-        File file = new File(PATH);
+        File file = new File(V2_0 + " " + PATH);
         if (file.exists()) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root;
@@ -38,14 +37,21 @@ public class PersistenceManager {
                 e.printStackTrace();
                 return;
             }
-            String version = extractFileVersion(file.getName());
-            ObjectNode translatedData = root.deepCopy();
-            if (version.equals("[1.0]")) {
-                if (VERSION.equals("[2.0]")) {
-                    translatedData = Translate1_0To2_0.convert(mapper, root);
-                }
+            loadPlayers(root);
+            return;
+        }
+        file = new File(V1_0 + " " + PATH);
+        if (file.exists()) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root;
+            try {
+                root = mapper.readValue(file, JsonNode.class);
             }
-
+            catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+            ObjectNode translatedData = Translate1_0To2_0.convert(mapper, root);
             loadPlayers(mapper.convertValue(translatedData, JsonNode.class));
         }
     }
@@ -113,7 +119,7 @@ public class PersistenceManager {
         ObjectNode root = mapper.createObjectNode();
         root.set("players", mapper.convertValue(gameModel.buildPlayerJsonNode(mapper), JsonNode.class));
         try {
-            mapper.writeValue(new File(PATH), root);
+            mapper.writeValue(new File(VTHIS + " " + PATH), root);
         }
         catch (IOException e) {
             e.printStackTrace();

@@ -27,7 +27,7 @@ public class BotModel {
     private GameAPI api;
     private final long START_TIME;
 
-    private int AUTO_SAVE_RATE_IN_MINUTES = 45;
+    private int AUTO_SAVE_RATE_IN_MINUTES = 1;
     private long lastSaveTime;
 
     public BotModel(String savePath) {

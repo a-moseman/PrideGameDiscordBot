@@ -37,7 +37,7 @@ public class SpellBook {
         }
         SpellEffect spellEffect = spells.get(index).cast();
         if (spellEffect != null) {
-            currentSpellEffect.sum(spellEffect);
+            currentSpellEffect = currentSpellEffect.sum(spellEffect);
             if (spells.get(index).getUses() <= 0) { // remove used up spells
                 spells.remove(index);
             }
