@@ -23,6 +23,8 @@ public class BotModel {
     private static final String COMMANDS_MESSAGE_COMMANDS = "p>commands - Provides the list of commands.";
     private static final String COMMANDS_MESSAGE_BUY = "p>buy <type> <amount> - Purchase one of the given type {ego, guilt, honor, dishonor}. The optional amount argument can be used for some of the types to buy more than one in a single command invocation.";
     private static final String COMMANDS_MESSAGE_HELP = "p>help - Provides some helpful starting information.";
+    private static final String COMMANDS_MESSAGE_SPELLS = "p>spells - Provides a list of your spells.";
+    private static final String COMMANDS_MESSAGE_CAST = "p>cast <index> - Cast the spell denoted by the index. The index of a spell can be found using the p>spells command.";
 
     private GameAPI api;
     private final long START_TIME;
@@ -305,9 +307,9 @@ public class BotModel {
                 "\n\t\tCost is equal to 1 more than the current amount times 10 (e.g. cost_of_next_ego = (ego + 1) * 10)." +
                 "\n\t\tEach increase their respective collection amounts by their value (e.g. pride_per_collection = 1 + ego)" +
                 "\n\tHonor and Dishonor:" +
-                "\n\t\t[CURRENTLY DO NOTHING]" +
                 "\n\t\tAs you gain levels of these, you gain access to various game features." +
-                "\n\t\tSpecifically, your feature access level is equal to the greatest of the two values."
+                "\n\t\tSpecifically, your feature access level is equal to the greatest of the two values." +
+                "\n\t\tThe first level gives you access to the spell book module."
         );
     }
 
@@ -331,6 +333,8 @@ public class BotModel {
                 "\n\t" + COMMANDS_MESSAGE_COLLECT +
                 "\n\t" + COMMANDS_MESSAGE_BUY +
                 "\n\t" + COMMANDS_MESSAGE_STATS +
+                "\n\t" + COMMANDS_MESSAGE_SPELLS +
+                "\n\t" + COMMANDS_MESSAGE_CAST +
                 "\n\t" + COMMANDS_MESSAGE_GAMEINFO +
                 "\n\t" + COMMANDS_MESSAGE_BOTINFO +
                 "\n\t" + COMMANDS_MESSAGE_COMMANDS +
