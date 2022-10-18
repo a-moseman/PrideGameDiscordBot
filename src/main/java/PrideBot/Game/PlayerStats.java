@@ -20,7 +20,7 @@ public class PlayerStats {
     }
 
     private long costOfNextGuilt() {
-        return (shame + 1) * 10;
+        return (guilt + 1) * 10;
     }
 
     private long costOfNextHonor() {
@@ -78,9 +78,9 @@ public class PlayerStats {
     }
 
     protected boolean buyGuilt() {
-        long cost = costOfNextGuilt();
-        if (cost <= shame) {
-            shame -= cost;
+        if (costOfNextGuilt() <= shame) {
+            System.out.println("UWU");
+            shame -= costOfNextGuilt();
             guilt++;
             return true;
         }

@@ -29,7 +29,7 @@ public class BotModel {
     private GameAPI api;
     private final long START_TIME;
 
-    private int AUTO_SAVE_RATE_IN_MINUTES = 1;
+    private int AUTO_SAVE_RATE_IN_MINUTES = 45;
     private long lastSaveTime;
 
     public BotModel(String savePath) {
@@ -195,24 +195,25 @@ public class BotModel {
         if (command.getSize() > 3) {
             return ERR_TOO_MANY_ARGS;
         }
-        int amount;
         switch (command.getTerm(1).toUpperCase(Locale.ROOT)) {
             case "EGO":
+                int ego;
                 try {
-                    amount = Integer.parseInt(command.getTerm(2));
+                    ego = Integer.parseInt(command.getTerm(2));
                 }
                 catch (Exception e) {
                     return ERR_INVALID_ARG;
                 }
-                return buyEgo(command.getAuthor().getId(), amount);
+                return buyEgo(command.getAuthor().getId(), ego);
             case "GUILT":
+                int guilt;
                 try {
-                    amount = Integer.parseInt(command.getTerm(2));
+                    guilt = Integer.parseInt(command.getTerm(2));
                 }
                 catch (Exception e) {
                     return ERR_INVALID_ARG;
                 }
-                return buyGuilt(command.getAuthor().getId(), amount);
+                return buyGuilt(command.getAuthor().getId(), guilt);
             case "HONOR":
                 if (command.getSize() > 2) {
                     return ERR_TOO_MANY_ARGS;
