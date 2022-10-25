@@ -16,11 +16,11 @@ public class PlayerStats {
     private long dishonor;
 
     private long costOfNextEgo() {
-        return (ego + 1) * 10;
+        return (ego + 1) * Configuration.TIER_ONE_COST_MULTIPLIER;
     }
 
     private long costOfNextGuilt() {
-        return (guilt + 1) * 10;
+        return (guilt + 1) * Configuration.TIER_ONE_COST_MULTIPLIER;
     }
 
     private long costOfNextHonor() {
@@ -79,7 +79,6 @@ public class PlayerStats {
 
     protected boolean buyGuilt() {
         if (costOfNextGuilt() <= shame) {
-            System.out.println("UWU");
             shame -= costOfNextGuilt();
             guilt++;
             return true;

@@ -7,7 +7,7 @@
     <groupId>org.amoseman</groupId>
     <artifactId>PrideGameDiscordBot</artifactId>
     <packaging>pom</packaging>
-    <version>2.0</version>
+    <version>1.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

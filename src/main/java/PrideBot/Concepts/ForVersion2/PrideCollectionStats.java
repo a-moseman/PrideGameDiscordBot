@@ -1,4 +1,4 @@
-package PrideBot.Game.ForVersion2;
+package PrideBot.Concepts.ForVersion2;
 
 public class PrideCollectionStats {
     protected final long PRIDE_PER_COLLECTION;
