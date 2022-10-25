@@ -24,11 +24,11 @@ public class PlayerStats {
     }
 
     private long costOfNextHonor() {
-        return (honor + 1) * 10;
+        return (honor + 1) * Configuration.TIER_TWO_COST_MULTIPLIER;
     }
 
     private long costOfNextDishonor() {
-        return (dishonor + 1) * 10;
+        return (dishonor + 1) * Configuration.TIER_TWO_COST_MULTIPLIER;
     }
 
     protected PlayerStats() {
