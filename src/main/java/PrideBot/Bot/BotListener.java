@@ -53,7 +53,7 @@ public class BotListener extends ListenerAdapter {
         }
         if (content.startsWith("p>")) {
             Command command = new Command(author, content.substring(2));
-            Response response = botModel.process(command, isPrideBotAdmin(author));
+            Response response = botModel.process(command, guild, isPrideBotAdmin(author));
             sendResponse(channel, response);
         }
     }

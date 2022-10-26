@@ -4,6 +4,7 @@ import PrideBot.Game.GameAPI;
 import PrideBot.Game.Responses.BuyFailResult;
 import PrideBot.Game.Responses.BuyResult;
 import PrideBot.Game.Responses.BuySuccessResult;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.Locale;
 
@@ -57,7 +58,7 @@ public class BotModel {
         api.addNewPlayer(uuid);
     }
 
-    public Response process(Command command, boolean isAdmin) {
+    public Response process(Command command, Guild guild, boolean isAdmin) {
         switch (command.getTerm(0).toUpperCase(Locale.ROOT)) {
             case "BLESS":
                 if (!isAdmin) {
@@ -74,7 +75,7 @@ public class BotModel {
             case "BUY":
                 return buy(command);
             case "STATS":
-                return stats(command);
+                return stats(command, guild);
             case "GAMEINFO":
                 return gameinfo(command);
             case "BOTINFO" :
@@ -298,7 +299,7 @@ public class BotModel {
         return new Response("MESSAGE", username + ", you failed to buy a spell.");
     }
 
-    private Response stats(Command command) {
+    private Response stats(Command command, Guild guild) {
         if (command.getSize() > 2) {
             return ERR_TOO_MANY_ARGS;
         }
@@ -309,7 +310,8 @@ public class BotModel {
         else {
             uuid = command.getAuthor().getId();
         }
-        return new Response("MESSAGE", "Stats:" +
+        String name = guild.getMemberById(uuid).getEffectiveName();
+        return new Response("MESSAGE", name +  "'s Stats:" +
                 "\n\tPride: " + api.getPride(uuid) +
                 "\n\tShame: " + api.getShame(uuid) +
                 "\n\tEgo: " + api.getEgo(uuid) +
@@ -326,7 +328,7 @@ public class BotModel {
                 "\n\t\tEffectively a currency." +
                 "\n\tEgo and Guilt:" +
                 "\n\t\tEach can be bought with pride and shame respectively." +
-                "\n\t\tCost is equal to 1 more than the current amount times 10 (e.g. cost_of_next_ego = (ego + 1) * 10)." +
+                "\n\t\tCost is equal to 1 more than the current amount times 7 (e.g. cost_of_next_ego = (ego + 1) * 7)." +
                 "\n\t\tEach increase their respective collection amounts by their value (e.g. pride_per_collection = 1 + ego)" +
                 "\n\tHonor and Dishonor:" +
                 "\n\t\tAs you gain levels of these, you gain access to various game features." +
@@ -338,7 +340,7 @@ public class BotModel {
     private Response botinfo(Command command) {
         return new Response("MESSAGE", "PrideBot.Bot Info:" +
                 "\n\tUptime: " + getUptime() + " days" +
-                "\n\tVersion: v2.0" +
+                "\n\tVersion: v2.2" +
                 "\n\tDeveloper: Glyphical" +
                 "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot"
         );
