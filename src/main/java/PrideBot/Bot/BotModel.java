@@ -184,10 +184,14 @@ public class BotModel {
             return ERR_TOO_MANY_ARGS;
         }
         if (api.collect(command.getAuthor().getId())) {
-            return new Response("MESSAGE", "You have completed your daily collection.");
+            return new Response("MESSAGE", command.getAuthor().getName() + ", you have completed your daily collection.");
         }
         else {
-            return new Response("MESSAGE", "You cannot collect at the moment. Try again later.");
+            double t = ((double) ((int) (api.getDaysUntilNextCollection(command.getAuthor().getId()) * 1000))) / 1000;
+            t += 0.005;
+            t = ((double)(int)(t * 100)) / 100;
+
+            return new Response("MESSAGE", command.getAuthor().getName() + ", you cannot collect at the moment. Try again in " + t + " days.");
         }
     }
 
@@ -207,7 +211,7 @@ public class BotModel {
                 catch (Exception e) {
                     return ERR_INVALID_ARG;
                 }
-                return buyEgo(command.getAuthor().getId(), ego);
+                return buyEgo(command.getAuthor().getId(), command.getAuthor().getName(), ego);
             case "GUILT":
                 int guilt;
                 try {
@@ -216,17 +220,17 @@ public class BotModel {
                 catch (Exception e) {
                     return ERR_INVALID_ARG;
                 }
-                return buyGuilt(command.getAuthor().getId(), guilt);
+                return buyGuilt(command.getAuthor().getId(), command.getAuthor().getName(), guilt);
             case "HONOR":
                 if (command.getSize() > 2) {
                     return ERR_TOO_MANY_ARGS;
                 }
-                return buyHonor(command.getAuthor().getId());
+                return buyHonor(command.getAuthor().getId(), command.getAuthor().getName());
             case "DISHONOR":
                 if (command.getSize() > 2) {
                     return ERR_TOO_MANY_ARGS;
                 }
-                return buyDishonor(command.getAuthor().getId());
+                return buyDishonor(command.getAuthor().getId(), command.getAuthor().getName());
             case "SPELL":
                 if (command.getSize() > 2) {
                     return ERR_TOO_MANY_ARGS;
@@ -237,7 +241,7 @@ public class BotModel {
         }
     }
 
-    private Response buyEgo(String uuid, int amount) {
+    private Response buyEgo(String uuid, String username, int amount) {
         BuyResult buyResult = null;
         long spentPride = 0;
         int i = 0;
@@ -247,12 +251,12 @@ public class BotModel {
         }
         if (i == 0) {
             BuyFailResult buyFailResult = (BuyFailResult) buyResult;
-            return new Response("MESSAGE", "You cannot afford to buy any ego.\nYou need " + buyFailResult.MISSING_CURRENCY + " more pride to buy 1 ego.");
+            return new Response("MESSAGE", username + ", you cannot afford to buy any ego.\nYou need " + buyFailResult.MISSING_CURRENCY + " more pride to buy 1 ego.");
         }
-        return new Response("MESSAGE", "You have bought " + i + " ego for " + spentPride + " pride.");
+        return new Response("MESSAGE", username + ", you have bought " + i + " ego for " + spentPride + " pride.");
     }
 
-    private Response buyGuilt(String uuid, int amount) {
+    private Response buyGuilt(String uuid, String username, int amount) {
         BuyResult buyResult = null;
         long spentShame = 0;
         int i = 0;
@@ -262,27 +266,27 @@ public class BotModel {
         }
         if (i == 0) {
             BuyFailResult buyFailResult = (BuyFailResult) buyResult;
-            return new Response("MESSAGE", "You can not afford to buy guilt.\n You need " + buyFailResult.MISSING_CURRENCY + " more shame to buy 1 guilt.");
+            return new Response("MESSAGE", username + ", you can not afford to buy guilt.\n You need " + buyFailResult.MISSING_CURRENCY + " more shame to buy 1 guilt.");
         }
-        return new Response("MESSAGE", "You have bought " + i + " guilt for " + spentShame + " shame.");
+        return new Response("MESSAGE", username + ", you have bought " + i + " guilt for " + spentShame + " shame.");
     }
 
-    private Response buyHonor(String uuid) {
+    private Response buyHonor(String uuid, String username) {
         BuyResult buyResult = api.buyHonor(uuid);
         if (buyResult instanceof BuySuccessResult) {
-            return new Response("MESSAGE", "You bought 1 honor for all of your ego.");
+            return new Response("MESSAGE", username + ", you bought 1 honor for all of your ego.");
         }
         BuyFailResult buyFailResult = (BuyFailResult) buyResult;
-        return new Response("MESSAGE", "You can not afford to buy honor.\nYou need " + buyFailResult.MISSING_CURRENCY + " more ego to buy 1 honor.");
+        return new Response("MESSAGE", username + ", you can not afford to buy honor.\nYou need " + buyFailResult.MISSING_CURRENCY + " more ego to buy 1 honor.");
     }
 
-    private Response buyDishonor(String uuid) {
+    private Response buyDishonor(String uuid, String username) {
         BuyResult buyResult = api.buyDishonor(uuid);
         if (buyResult instanceof BuySuccessResult) {
-            return new Response("MESSAGE", "You bought 1 dishonor for all of your guilt.");
+            return new Response("MESSAGE", username + ", you bought 1 dishonor for all of your guilt.");
         }
         BuyFailResult buyFailResult = (BuyFailResult) buyResult;
-        return new Response("MESSAGE", "You can not afford to buy dishonor.\nYou need " + buyFailResult.MISSING_CURRENCY + " more guilt to buy 1 dishonor.");
+        return new Response("MESSAGE", username + ", you can not afford to buy dishonor.\nYou need " + buyFailResult.MISSING_CURRENCY + " more guilt to buy 1 dishonor.");
     }
 
     private Response buySpell(String uuid) {
