@@ -15,19 +15,19 @@ public class PlayerStats {
     private long guilt;
     private long dishonor;
 
-    private long costOfNextEgo() {
+    protected long costOfNextEgo() {
         return (ego + 1) * Configuration.TIER_ONE_COST_MULTIPLIER;
     }
 
-    private long costOfNextGuilt() {
+    protected long costOfNextGuilt() {
         return (guilt + 1) * Configuration.TIER_ONE_COST_MULTIPLIER;
     }
 
-    private long costOfNextHonor() {
+    protected long costOfNextHonor() {
         return (honor + 1) * Configuration.TIER_TWO_COST_MULTIPLIER;
     }
 
-    private long costOfNextDishonor() {
+    protected long costOfNextDishonor() {
         return (dishonor + 1) * Configuration.TIER_TWO_COST_MULTIPLIER;
     }
 

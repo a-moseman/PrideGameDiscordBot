@@ -1,5 +1,10 @@
 package PrideBot.Game;
 
+import PrideBot.Game.Responses.BuyFailResponse;
+import PrideBot.Game.Responses.BuyResponse;
+import PrideBot.Game.Responses.BuySuccessResponse;
+import PrideBot.Game.Responses.Currency;
+
 /**
  * Finished for version 1.
  * The API of the game.
@@ -60,8 +65,22 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public boolean buyEgo(String uuid) {
-        return gameModel.getPlayer(uuid).getStats().buyEgo();
+    public BuyResponse buyEgo(String uuid) {
+        long cost = gameModel.getPlayer(uuid).getStats().costOfNextEgo();
+        if (gameModel.getPlayer(uuid).getStats().buyEgo()) {
+            return new BuySuccessResponse(
+                    "player_name",
+                    "ego",
+                    Currency.PRIDE,
+                    cost
+            );
+        }
+        return new BuyFailResponse(
+                "player_name",
+                "ego",
+                Currency.PRIDE,
+                cost - getPride(uuid)
+        );
     }
 
     /**
@@ -70,8 +89,23 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public boolean buyGuilt(String uuid) {
-        return gameModel.getPlayer(uuid).getStats().buyGuilt();
+    public BuyResponse buyGuilt(String uuid) {
+        //return gameModel.getPlayer(uuid).getStats().buyGuilt();
+        long cost = gameModel.getPlayer(uuid).getStats().costOfNextGuilt();
+        if (gameModel.getPlayer(uuid).getStats().buyGuilt()) {
+            return new BuySuccessResponse(
+                    "player_name",
+                    "ego",
+                    Currency.SHAME,
+                    cost
+            );
+        }
+        return new BuyFailResponse(
+                "player_name",
+                "ego",
+                Currency.SHAME,
+                cost - getShame(uuid);
+        );
     }
 
     /**
@@ -80,12 +114,23 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public boolean buyHonor(String uuid) {
+    public BuyResponse buyHonor(String uuid) {
+        long cost = gameModel.getPlayer(uuid).getStats().costOfNextHonor();
         if (gameModel.getPlayer(uuid).getStats().buyHonor()) {
             gameModel.getPlayer(uuid).retroactivelyAddModules();
-            return true;
+            return new BuySuccessResponse(
+                    "player_name",
+                    "honor",
+                    Currency.EGO,
+                    getEgo(uuid)
+            );
         }
-        return false;
+        return new BuyFailResponse(
+                "player_name",
+                "honor",
+                Currency.EGO,
+                cost - getEgo(uuid);
+        );
     }
 
     /**
@@ -93,12 +138,24 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public boolean buyDishonor(String uuid) {
+    public BuyResponse buyDishonor(String uuid) {
+        long cost = gameModel.getPlayer(uuid).getStats().costOfNextDishonor();
         if (gameModel.getPlayer(uuid).getStats().buyDishonor()) {
             gameModel.getPlayer(uuid).retroactivelyAddModules();
-            return true;
+            return new BuySuccessResponse(
+                    "player_name",
+                    "dishonor",
+                    Currency.GUILT,
+                    getGuilt(uuid)
+            );
         }
-        return false;    }
+        return new BuyFailResponse(
+                "player_name",
+                "dishonor",
+                Currency.GUILT,
+                cost - getGuilt(uuid)
+        );
+    }
 
     /**
      * Exchange 2 of a player's pride for a chance to get a spell.
