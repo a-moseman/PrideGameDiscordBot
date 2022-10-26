@@ -1,8 +1,8 @@
 package PrideBot.Game;
 
-import PrideBot.Game.Responses.BuyFailResponse;
-import PrideBot.Game.Responses.BuyResponse;
-import PrideBot.Game.Responses.BuySuccessResponse;
+import PrideBot.Game.Responses.BuyFailResult;
+import PrideBot.Game.Responses.BuyResult;
+import PrideBot.Game.Responses.BuySuccessResult;
 import PrideBot.Game.Responses.Currency;
 
 /**
@@ -65,17 +65,17 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public BuyResponse buyEgo(String uuid) {
+    public BuyResult buyEgo(String uuid) {
         long cost = gameModel.getPlayer(uuid).getStats().costOfNextEgo();
         if (gameModel.getPlayer(uuid).getStats().buyEgo()) {
-            return new BuySuccessResponse(
+            return new BuySuccessResult(
                     "player_name",
                     "ego",
                     Currency.PRIDE,
                     cost
             );
         }
-        return new BuyFailResponse(
+        return new BuyFailResult(
                 "player_name",
                 "ego",
                 Currency.PRIDE,
@@ -89,22 +89,22 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public BuyResponse buyGuilt(String uuid) {
+    public BuyResult buyGuilt(String uuid) {
         //return gameModel.getPlayer(uuid).getStats().buyGuilt();
         long cost = gameModel.getPlayer(uuid).getStats().costOfNextGuilt();
         if (gameModel.getPlayer(uuid).getStats().buyGuilt()) {
-            return new BuySuccessResponse(
+            return new BuySuccessResult(
                     "player_name",
                     "ego",
                     Currency.SHAME,
                     cost
             );
         }
-        return new BuyFailResponse(
+        return new BuyFailResult(
                 "player_name",
                 "ego",
                 Currency.SHAME,
-                cost - getShame(uuid);
+                cost - getShame(uuid)
         );
     }
 
@@ -114,22 +114,22 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public BuyResponse buyHonor(String uuid) {
+    public BuyResult buyHonor(String uuid) {
         long cost = gameModel.getPlayer(uuid).getStats().costOfNextHonor();
         if (gameModel.getPlayer(uuid).getStats().buyHonor()) {
             gameModel.getPlayer(uuid).retroactivelyAddModules();
-            return new BuySuccessResponse(
+            return new BuySuccessResult(
                     "player_name",
                     "honor",
                     Currency.EGO,
                     getEgo(uuid)
             );
         }
-        return new BuyFailResponse(
+        return new BuyFailResult(
                 "player_name",
                 "honor",
                 Currency.EGO,
-                cost - getEgo(uuid);
+                cost - getEgo(uuid)
         );
     }
 
@@ -138,18 +138,18 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it.
      */
-    public BuyResponse buyDishonor(String uuid) {
+    public BuyResult buyDishonor(String uuid) {
         long cost = gameModel.getPlayer(uuid).getStats().costOfNextDishonor();
         if (gameModel.getPlayer(uuid).getStats().buyDishonor()) {
             gameModel.getPlayer(uuid).retroactivelyAddModules();
-            return new BuySuccessResponse(
+            return new BuySuccessResult(
                     "player_name",
                     "dishonor",
                     Currency.GUILT,
                     getGuilt(uuid)
             );
         }
-        return new BuyFailResponse(
+        return new BuyFailResult(
                 "player_name",
                 "dishonor",
                 Currency.GUILT,
@@ -162,8 +162,21 @@ public class GameAPI {
      * @param uuid The UUID of the player.
      * @return boolean Whether or not they can afford it or they don't have the module.
      */
-    public boolean buySpell(String uuid) {
-        return gameModel.getPlayer(uuid).buySpell();
+    public BuyResult buySpell(String uuid) {
+        if (gameModel.getPlayer(uuid).buySpell()) {
+            return new BuySuccessResult(
+                    "player_name",
+                    "spell",
+                    Currency.NONE,
+                    0
+            );
+        }
+        return new BuyFailResult(
+                "player_name",
+                "spell",
+                Currency.NONE,
+                0
+        );
     }
 
     /**

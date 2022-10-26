@@ -4,5 +4,6 @@ public enum Currency {
     PRIDE,
     SHAME,
     EGO,
-    GUILT
+    GUILT,
+    NONE
 }

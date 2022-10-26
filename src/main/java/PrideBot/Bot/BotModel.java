@@ -1,6 +1,9 @@
 package PrideBot.Bot;
 
 import PrideBot.Game.GameAPI;
+import PrideBot.Game.Responses.BuyFailResult;
+import PrideBot.Game.Responses.BuyResult;
+import PrideBot.Game.Responses.BuySuccessResult;
 
 import java.util.Locale;
 
@@ -235,44 +238,58 @@ public class BotModel {
     }
 
     private Response buyEgo(String uuid, int amount) {
+        BuyResult buyResult = null;
+        long spentPride = 0;
         int i = 0;
-        while (i < amount && api.buyEgo(uuid)) {
+        while (i < amount && (buyResult = api.buyEgo(uuid)) instanceof BuySuccessResult) {
             i++;
+            spentPride += ((BuySuccessResult) buyResult).SPENT_AMOUNT;
         }
         if (i == 0) {
-            return new Response("MESSAGE", "You can not afford to buy ego");
+            BuyFailResult buyFailResult = (BuyFailResult) buyResult;
+            return new Response("MESSAGE", "You cannot afford to buy any ego.\nYou need " + buyFailResult.MISSING_CURRENCY + " more pride to buy 1 ego.");
         }
-        return new Response("MESSAGE", "You have bought " + i + " ego");
+        return new Response("MESSAGE", "You have bought " + i + " ego for " + spentPride + " pride.");
     }
 
     private Response buyGuilt(String uuid, int amount) {
+        BuyResult buyResult = null;
+        long spentShame = 0;
         int i = 0;
-        while (i < amount && api.buyGuilt(uuid)) {
+        while (i < amount && (buyResult = api.buyGuilt(uuid)) instanceof BuySuccessResult) {
             i++;
+            spentShame += ((BuySuccessResult) buyResult).SPENT_AMOUNT;
         }
         if (i == 0) {
-            return new Response("MESSAGE", "You can not afford to buy guilt");
+            BuyFailResult buyFailResult = (BuyFailResult) buyResult;
+            return new Response("MESSAGE", "You can not afford to buy guilt.\n You need " + buyFailResult.MISSING_CURRENCY + " more shame to buy 1 guilt.");
         }
-        return new Response("MESSAGE", "You have bought " + i + " guilt");
+        return new Response("MESSAGE", "You have bought " + i + " guilt for " + spentShame + " shame.");
     }
 
     private Response buyHonor(String uuid) {
-        if (api.buyHonor(uuid)) {
-            return new Response("MESSAGE", "You bought 1 honor");
+        BuyResult buyResult = api.buyHonor(uuid);
+        if (buyResult instanceof BuySuccessResult) {
+            return new Response("MESSAGE", "You bought 1 honor for all of your ego.");
         }
-        return new Response("MESSAGE", "You can not afford to buy honor");
+        BuyFailResult buyFailResult = (BuyFailResult) buyResult;
+        return new Response("MESSAGE", "You can not afford to buy honor.\nYou need " + buyFailResult.MISSING_CURRENCY + " more ego to buy 1 honor.");
     }
 
     private Response buyDishonor(String uuid) {
-        if (api.buyDishonor(uuid)) {
-            return new Response("MESSAGE", "You bought 1 dishonor");
+        BuyResult buyResult = api.buyDishonor(uuid);
+        if (buyResult instanceof BuySuccessResult) {
+            return new Response("MESSAGE", "You bought 1 dishonor for all of your guilt.");
         }
-        return new Response("MESSAGE", "You can not afford to buy dishonor");
+        BuyFailResult buyFailResult = (BuyFailResult) buyResult;
+        return new Response("MESSAGE", "You can not afford to buy dishonor.\nYou need " + buyFailResult.MISSING_CURRENCY + " more guilt to buy 1 dishonor.");
     }
 
     private Response buySpell(String uuid) {
-        if (api.buySpell(uuid)) {
-            return new Response("MESSAGE", "You bought 1 spell.");
+        BuyResult buyResult = api.buySpell(uuid);
+        if (buyResult instanceof BuySuccessResult) {
+            BuySuccessResult buySuccessResult = (BuySuccessResult) buyResult;
+            return new Response("MESSAGE", "You bought 1 spell for " + buySuccessResult.SPENT_AMOUNT + " pride/shame.");
         }
         return new Response("MESSAGE", "You failed.");
     }

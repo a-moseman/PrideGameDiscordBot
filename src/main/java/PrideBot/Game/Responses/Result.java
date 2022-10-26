@@ -1,10 +1,10 @@
 package PrideBot.Game.Responses;
 
 // TODO: implement
-public class Response {
+public class Result {
     public final String TARGET_PLAYER_NAME; // should be their actual username
 
-    public Response(String targetPlayerName) {
+    public Result(String targetPlayerName) {
         this.TARGET_PLAYER_NAME = targetPlayerName;
     }
 }
