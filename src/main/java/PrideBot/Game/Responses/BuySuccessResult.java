@@ -4,14 +4,14 @@ public class BuySuccessResult extends BuyResult {
     public long SPENT_AMOUNT;
     public String GAINED_ITEM;
 
-    public BuySuccessResult(String targetPlayerName, String targetItem, Currency currency, long spentAmount) {
-        super(targetPlayerName, targetItem, currency);
+    public BuySuccessResult(String targetItem, Currency currency, long spentAmount) {
+        super(targetItem, currency);
         this.SPENT_AMOUNT = spentAmount;
         this.GAINED_ITEM = targetItem;
     }
 
-    public BuySuccessResult(String targetPlayerName, String targetItem, Currency currency, long spentAmount, String gainedItem) {
-        super(targetPlayerName, targetItem, currency);
+    public BuySuccessResult(String targetItem, Currency currency, long spentAmount, String gainedItem) {
+        super(targetItem, currency);
         this.SPENT_AMOUNT = spentAmount;
         this.GAINED_ITEM = gainedItem;
     }

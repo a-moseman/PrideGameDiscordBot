@@ -163,6 +163,9 @@ public class BotModel {
 
 
     private Response describe(Command command) {
+        if (command.getSize() == 1) {
+            return new Response("Missing thing to describe.");
+        }
         switch (command.getTerm(1).toUpperCase(Locale.ROOT)) {
             case "SPELL": // describe a given spell in the player's spell book based on index
                 return describeSpell(command);

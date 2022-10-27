@@ -69,14 +69,12 @@ public class GameAPI {
         long cost = gameModel.getPlayer(uuid).getStats().costOfNextEgo();
         if (gameModel.getPlayer(uuid).getStats().buyEgo()) {
             return new BuySuccessResult(
-                    "player_name",
                     "ego",
                     Currency.PRIDE,
                     cost
             );
         }
         return new BuyFailResult(
-                "player_name",
                 "ego",
                 Currency.PRIDE,
                 cost - getPride(uuid)
@@ -94,14 +92,12 @@ public class GameAPI {
         long cost = gameModel.getPlayer(uuid).getStats().costOfNextGuilt();
         if (gameModel.getPlayer(uuid).getStats().buyGuilt()) {
             return new BuySuccessResult(
-                    "player_name",
                     "ego",
                     Currency.SHAME,
                     cost
             );
         }
         return new BuyFailResult(
-                "player_name",
                 "ego",
                 Currency.SHAME,
                 cost - getShame(uuid)
@@ -119,14 +115,12 @@ public class GameAPI {
         if (gameModel.getPlayer(uuid).getStats().buyHonor()) {
             gameModel.getPlayer(uuid).retroactivelyAddModules();
             return new BuySuccessResult(
-                    "player_name",
                     "honor",
                     Currency.EGO,
                     getEgo(uuid)
             );
         }
         return new BuyFailResult(
-                "player_name",
                 "honor",
                 Currency.EGO,
                 cost - getEgo(uuid)
@@ -143,14 +137,12 @@ public class GameAPI {
         if (gameModel.getPlayer(uuid).getStats().buyDishonor()) {
             gameModel.getPlayer(uuid).retroactivelyAddModules();
             return new BuySuccessResult(
-                    "player_name",
                     "dishonor",
                     Currency.GUILT,
                     getGuilt(uuid)
             );
         }
         return new BuyFailResult(
-                "player_name",
                 "dishonor",
                 Currency.GUILT,
                 cost - getGuilt(uuid)
@@ -165,14 +157,12 @@ public class GameAPI {
     public BuyResult buySpell(String uuid) {
         if (gameModel.getPlayer(uuid).buySpell()) {
             return new BuySuccessResult(
-                    "player_name",
                     "spell",
                     Currency.NONE,
                     0
             );
         }
         return new BuyFailResult(
-                "player_name",
                 "spell",
                 Currency.NONE,
                 0

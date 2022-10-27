@@ -4,8 +4,7 @@ public class CastSpellResult extends Result {
     public final String SPELL;
     public final int SPELL_RANK;
 
-    public CastSpellResult(String targetPlayerName, String spell, int spellRank) {
-        super(targetPlayerName);
+    public CastSpellResult(String spell, int spellRank) {
         this.SPELL = spell;
         this.SPELL_RANK = spellRank;
     }
