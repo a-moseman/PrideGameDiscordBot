@@ -57,7 +57,8 @@ public class BotModel {
     }
 
     public Response process(Command command, Guild guild, boolean isAdmin) {
-        switch (command.getTerm(0).toUpperCase(Locale.ROOT)) {
+        String c = Aliaser.translate(command.getTerm(0).toUpperCase(Locale.ROOT));
+        switch (c) {
             case "BLESS":
                 if (!isAdmin) {
                     return new Response(command.getAuthor().getName() + ", you do not have the pride_dm role.");
