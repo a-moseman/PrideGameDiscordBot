@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.Locale;
 
 public class BotModel {
-    private static final Response ERR_NOT_ADMIN = new Response("ERROR", "Not admin.");
     private static final Response ERR_INVALID_COMMAND = new Response("ERROR",  "Invalid command.");
     private static final Response ERR_TOO_MANY_ARGS = new Response("ERROR",  "Too many arguments.");
     private static final Response ERR_MISSING_ARGS = new Response("ERROR", "Missing arguments.");
@@ -60,12 +59,12 @@ public class BotModel {
         switch (command.getTerm(0).toUpperCase(Locale.ROOT)) {
             case "BLESS":
                 if (!isAdmin) {
-                    return ERR_NOT_ADMIN;
+                    return new Response("ERROR", command.getAuthor().getName() + ", you do not have the pride_dm role.");
                 }
                 return bless(command, guild);
             case "CURSE":
                 if (!isAdmin) {
-                    return ERR_NOT_ADMIN;
+                    return new Response("ERROR", command.getAuthor().getName() + ", you do not have the pride_dm role.");
                 }
                 return curse(command, guild);
             case "COLLECT":
