@@ -8,7 +8,7 @@ public class Spell {
     protected final String NAME; // must be unique
     protected final int LEVEL;
     protected final double CAST_RATE; // per day
-    private final SpellEffect SPELL_EFFECT;
+    protected final SpellEffect SPELL_EFFECT;
     private long lastCastTime; // milliseconds
     private int uses; // how many times can you cast the spell before you lose it
 

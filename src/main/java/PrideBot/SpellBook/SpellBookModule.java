@@ -110,4 +110,27 @@ public class SpellBookModule {
     public int getSpellLevel(int spellIndex) {
         return spellBook.get(spellIndex).LEVEL;
     }
+
+    public String getSpellDescription(int spellIndex) {
+        String description = "";
+        Spell spell = spellBook.get(spellIndex);
+        description += spell.NAME + " lv. " + spell.LEVEL + ":";
+        switch (spell.NAME) {
+            case "Luxuriate":
+                description += "\n\tDescription: Adds additional Bountifulness to your next collection. (collection amount = 1 + [ego or guilt] + bountifulness)";
+                description += "\n\tBountifulness: " + spell.SPELL_EFFECT.BOUNTIFULNESS;
+                break;
+            case "Empower":
+                description += "\n\tDescription: Adds a chances to crit on your next collection. Higher levels also grants a bit of Bountifulness. (collection amount = (1 + [ego or guilt] + bountifulness)";
+                description += "\n\tOn a crit, your collection amount will be doubled. (collection amount = 2 * (1 + [ego or guilt] + bountifulness))";
+                description += "\n\tBountifulness: " + spell.SPELL_EFFECT.BOUNTIFULNESS;
+                description += "\n\tCrit Chance: " + spell.SPELL_EFFECT.COLLECTION_CRIT_CHANCE;
+            case "Illuminate":
+                description += "\n\tDescription: Gives you the Pride Favored effect for your next collection. Pride Favored guarantees you will collect pride.";
+            case "Extinguish":
+                description += "\n\tDescription: Gives you the Shame Favored effect for your next collection. Shame Favored guarantees you will collect shame.";
+        }
+        description += "\n\tRemaining Uses: " + spell.getUses();
+        return description;
+    }
 }

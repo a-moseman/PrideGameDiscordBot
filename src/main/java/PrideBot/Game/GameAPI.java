@@ -303,4 +303,8 @@ public class GameAPI {
     public int getSpellLevel(String uuid, int spellIndex) {
         return gameModel.getPlayer(uuid).getSpellBookModule().getSpellLevel(spellIndex);
     }
+
+    public String getSpellDescription(String uuid, int spellIndex) {
+        return gameModel.getPlayer(uuid).getSpellBookModule().getSpellDescription(spellIndex);
+    }
 }

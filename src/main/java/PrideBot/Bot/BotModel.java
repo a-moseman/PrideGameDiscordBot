@@ -26,6 +26,7 @@ public class BotModel {
     private static final String COMMANDS_MESSAGE_HELP = "p>help - Provides some helpful starting information.";
     private static final String COMMANDS_MESSAGE_SPELLS = "p>spells - Provides a list of your spells.";
     private static final String COMMANDS_MESSAGE_CAST = "p>cast <index> - Cast the spell denoted by the index. The index of a spell can be found using the p>spells command.";
+    private static final String COMMANDS_DESCRIBE = "p>describe <args> - Describes the given thing. WIP.";
 
     private GameAPI api;
     private final long START_TIME;
@@ -85,8 +86,33 @@ public class BotModel {
                 return spells(command);
             case "CAST":
                 return cast(command);
+            case "DESCRIBE":
+                return describe(command);
             default:
                 return ERR_INVALID_COMMAND;
+        }
+    }
+
+    private Response describe(Command command) {
+        switch (command.getTerm(1).toUpperCase(Locale.ROOT)) {
+            case "SPELL":
+                int spellIndex;
+                try {
+                    spellIndex = Integer.parseInt(command.getTerm(2));
+                }
+                catch (Exception e) {
+                    return ERR_INVALID_ARG;
+                }
+                String spellDescription;
+                try {
+                    spellDescription = api.getSpellDescription(command.getAuthor().getId(), spellIndex);
+                }
+                catch (Exception e) {
+                    return ERR_INVALID_ARG;
+                }
+                return new Response("MESSAGE", spellDescription);
+            default:
+                return ERR_INVALID_ARG;
         }
     }
 
@@ -358,6 +384,7 @@ public class BotModel {
                 "\n\t" + COMMANDS_MESSAGE_STATS +
                 "\n\t" + COMMANDS_MESSAGE_SPELLS +
                 "\n\t" + COMMANDS_MESSAGE_CAST +
+                "\n\t" + COMMANDS_DESCRIBE +
                 "\n\t" + COMMANDS_MESSAGE_GAMEINFO +
                 "\n\t" + COMMANDS_MESSAGE_BOTINFO +
                 "\n\t" + COMMANDS_MESSAGE_COMMANDS +
