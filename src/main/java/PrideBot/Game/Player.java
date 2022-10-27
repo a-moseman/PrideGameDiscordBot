@@ -128,6 +128,9 @@ public class Player {
                     collectDailyShame();
                 }
             }
+            if (Util.randomDouble() < Configuration.COLLECTION_MISFIRE_PROBABILITY) {
+                currentAffinity = -currentAffinity;
+            }
             else if (currentAffinity > 0) {
                 collectDailyPride();
             }
