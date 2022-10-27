@@ -295,4 +295,12 @@ public class GameAPI {
     public long getDishonor(String uuid) {
         return gameModel.getPlayer(uuid).getStats().getDishonor();
     }
+
+    public String getSpellName(String uuid, int spellIndex) {
+        return gameModel.getPlayer(uuid).getSpellBookModule().getSpellName(spellIndex);
+    }
+
+    public int getSpellLevel(String uuid, int spellIndex) {
+        return gameModel.getPlayer(uuid).getSpellBookModule().getSpellLevel(spellIndex);
+    }
 }

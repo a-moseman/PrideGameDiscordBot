@@ -110,10 +110,11 @@ public class BotModel {
         catch (Exception e) {
             return ERR_INVALID_ARG;
         }
+        String spellName = api.getSpellName(command.getAuthor().getId(), spellIndex) + " lv. " + api.getSpellLevel(command.getAuthor().getId(), spellIndex);
         if (api.castSpell(command.getAuthor().getId(), spellIndex)) {
-            return new Response("MESSAGE", "Spell cast successfully.");
+            return new Response("MESSAGE", spellName + " cast successfully.");
         }
-        return new Response("MESSAGE", "Failed to cast spell.");
+        return new Response("MESSAGE", "Failed to cast " + spellName + ".");
     }
 
     private Response spells(Command command) {
@@ -125,6 +126,7 @@ public class BotModel {
         }
         return new Response(
                 "MESSAGE",
+                command.getAuthor().getName() + "'s Spells: " +
                 api.getSpellList(command.getAuthor().getId()));
     }
 

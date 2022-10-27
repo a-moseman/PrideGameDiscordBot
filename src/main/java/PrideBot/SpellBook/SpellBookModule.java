@@ -30,7 +30,7 @@ public class SpellBookModule {
 
     public String getSpellList() {
         if (spellBook.size() == 0) {
-            return "You have no spells.";
+            return "Empty.";
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < spellBook.size(); i++) {
@@ -101,5 +101,13 @@ public class SpellBookModule {
         node.set("spells", spellBook.buildJsonNode(mapper));
         node.set("current_spell_effect", spellBook.getCurrentSpellEffect().buildJsonNode(mapper));
         return node;
+    }
+
+    public String getSpellName(int spellIndex) {
+        return spellBook.get(spellIndex).NAME;
+    }
+
+    public int getSpellLevel(int spellIndex) {
+        return spellBook.get(spellIndex).LEVEL;
     }
 }
