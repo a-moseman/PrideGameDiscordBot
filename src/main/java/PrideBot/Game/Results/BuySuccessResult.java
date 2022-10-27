@@ -1,4 +1,4 @@
-package PrideBot.Game.Responses;
+package PrideBot.Game.Results;
 
 public class BuySuccessResult extends BuyResult {
     public long SPENT_AMOUNT;

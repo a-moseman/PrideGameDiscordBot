@@ -1,9 +1,9 @@
 package PrideBot.Bot;
 
 import PrideBot.Game.GameAPI;
-import PrideBot.Game.Responses.BuyFailResult;
-import PrideBot.Game.Responses.BuyResult;
-import PrideBot.Game.Responses.BuySuccessResult;
+import PrideBot.Game.Results.BuyFailResult;
+import PrideBot.Game.Results.BuyResult;
+import PrideBot.Game.Results.BuySuccessResult;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.Locale;

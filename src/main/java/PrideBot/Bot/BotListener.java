@@ -1,5 +1,6 @@
 package PrideBot.Bot;
 
+import PrideBot.ARS.AutoResponseSystem;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -10,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class BotListener extends ListenerAdapter {
+    private AutoResponseSystem ars;
+
     private BotModel botModel;
 
     // variables for onMessageReceived
@@ -21,6 +24,7 @@ public class BotListener extends ListenerAdapter {
 
     public BotListener(BotModel botModel) {
         this.botModel = botModel;
+        this.ars = new AutoResponseSystem();
     }
 
     private boolean isPrideBotAdmin(User user) {
@@ -55,6 +59,10 @@ public class BotListener extends ListenerAdapter {
             Command command = new Command(author, content.substring(2));
             Response response = botModel.process(command, guild, isPrideBotAdmin(author));
             sendResponse(channel, response);
+        }
+        Response arsResponse = ars.process(guild, channel, author, message);
+        if (arsResponse != null) {
+            sendResponse(channel, arsResponse);
         }
     }
 

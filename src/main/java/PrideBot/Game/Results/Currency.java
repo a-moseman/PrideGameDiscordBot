@@ -1,4 +1,4 @@
-package PrideBot.Game.Responses;
+package PrideBot.Game.Results;
 
 public enum Currency {
     PRIDE,

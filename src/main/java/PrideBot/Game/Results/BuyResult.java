@@ -1,4 +1,4 @@
-package PrideBot.Game.Responses;
+package PrideBot.Game.Results;
 
 public class BuyResult extends Result {
     public final String TARGET_ITEM;

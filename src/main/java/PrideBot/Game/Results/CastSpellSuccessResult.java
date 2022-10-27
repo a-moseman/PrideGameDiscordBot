@@ -1,4 +1,4 @@
-package PrideBot.Game.Responses;
+package PrideBot.Game.Results;
 
 public class CastSpellSuccessResult extends CastSpellResult {
     public final int REMAINING_SPELL_USES;

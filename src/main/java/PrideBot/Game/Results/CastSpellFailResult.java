@@ -1,4 +1,4 @@
-package PrideBot.Game.Responses;
+package PrideBot.Game.Results;
 
 public class CastSpellFailResult extends CastSpellResult {
     public final double REMAINING_COOLDOWN; // in days

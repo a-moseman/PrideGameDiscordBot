@@ -1,4 +1,4 @@
-package PrideBot.Game.Responses;
+package PrideBot.Game.Results;
 
 public class BuyFailResult extends BuyResult {
     public final long MISSING_CURRENCY;

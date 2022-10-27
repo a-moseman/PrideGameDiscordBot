@@ -1,9 +1,9 @@
 package PrideBot.Game;
 
-import PrideBot.Game.Responses.BuyFailResult;
-import PrideBot.Game.Responses.BuyResult;
-import PrideBot.Game.Responses.BuySuccessResult;
-import PrideBot.Game.Responses.Currency;
+import PrideBot.Game.Results.BuyFailResult;
+import PrideBot.Game.Results.BuyResult;
+import PrideBot.Game.Results.BuySuccessResult;
+import PrideBot.Game.Results.Currency;
 
 /**
  * Finished for version 1.
