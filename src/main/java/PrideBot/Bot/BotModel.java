@@ -16,8 +16,6 @@ public class BotModel {
     private static final Response ERR_INVALID_ARG = new Response("ERROR",  "Invalid argument.");
     private static final Response ERR_PLAYER_DNE = new Response("ERROR",  "Player does not exist.");
     private static final Response ERR_MISSING_SPELL_BOOK_MODULE = new Response("ERROR", "Missing spell book module.");
-    private static final Response RESPONSE_BLESSING = new Response("MESSAGE", "A blessing has occurred.");
-    private static final Response RESPONSE_CURSING = new Response("MESSAGE", "A cursing has occurred.");
     private static final String COMMANDS_MESSAGE_BLESS = "p>bless <target> <amount> - Grants the target player the given amount of pride. The target argument must be a mention and the amount argument must be a positive integer. (pride_dm only)";
     private static final String COMMANDS_MESSAGE_CURSE = "p>curse <target> <amount> - Grants the target player the given amount of shame. The target argument must be a mention and the amount argument must be a positive integer. (pride_dm only)";
     private static final String COMMANDS_MESSAGE_COLLECT = "p>collect - Collect your daily pride or shame. If you currently have more pride, you will collect pride, and vice versa.";
@@ -64,12 +62,12 @@ public class BotModel {
                 if (!isAdmin) {
                     return ERR_NOT_ADMIN;
                 }
-                return bless(command);
+                return bless(command, guild);
             case "CURSE":
                 if (!isAdmin) {
                     return ERR_NOT_ADMIN;
                 }
-                return curse(command);
+                return curse(command, guild);
             case "COLLECT":
                 return collect(command);
             case "BUY":
@@ -130,7 +128,7 @@ public class BotModel {
                 api.getSpellList(command.getAuthor().getId()));
     }
 
-    private Response bless(Command command) {
+    private Response bless(Command command, Guild guild) {
         // TODO: add ability to roll for amount
         if (command.getSize() < 3) {
             return ERR_MISSING_ARGS;
@@ -153,10 +151,10 @@ public class BotModel {
             return new Response("MESSAGE", "Amount must be a positive integer.");
         }
         api.bless(targetUUID, pride);
-        return RESPONSE_BLESSING;
+        return new Response("MESSAGE", guild.getMemberById(targetUUID).getEffectiveName() + ", you have been blessed for " + pride + " pride.");
     }
 
-    private Response curse(Command command) {
+    private Response curse(Command command, Guild guild) {
         // TODO: add ability to roll for amount
         if (command.getSize() < 3) {
             return ERR_MISSING_ARGS;
@@ -179,7 +177,7 @@ public class BotModel {
             return new Response("MESSAGE", "Amount must be a positive integer.");
         }
         api.curse(targetUUID, shame);
-        return RESPONSE_CURSING;
+        return new Response("MESSAGE", guild.getMemberById(targetUUID).getEffectiveName() + ", you have been cursed for " + shame + " shame.");
     }
 
     private Response collect(Command command) {
