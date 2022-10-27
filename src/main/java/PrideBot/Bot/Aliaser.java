@@ -13,6 +13,8 @@ public class Aliaser {
                 return "COMMAND";
             case "H":
                 return "HELP";
+            case "$":
+                return "BUY";
             default:
                 return in;
         }
