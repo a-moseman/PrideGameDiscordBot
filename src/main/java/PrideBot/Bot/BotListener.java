@@ -1,19 +1,21 @@
 package PrideBot.Bot;
 
-import PrideBot.ARS.AutoResponseSystem;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BotListener extends ListenerAdapter {
-    private AutoResponseSystem ars;
-
     private BotModel botModel;
+    private ArrayList<String> prideBotAdmins;
+    private ArrayList<String> guildsDetected;
 
     // variables for onMessageReceived
     private Guild guild;
@@ -22,33 +24,55 @@ public class BotListener extends ListenerAdapter {
     private String content;
     private MessageChannel channel;
 
+
     public BotListener(BotModel botModel) {
         this.botModel = botModel;
-        this.ars = new AutoResponseSystem();
+        this.prideBotAdmins = new ArrayList<>();
+        this.guildsDetected = new ArrayList<>();
     }
 
-    private boolean isPrideBotAdmin(User user) {
+    private void updatePrideBotAdmins() {
         guild.loadMembers(); // load the members of the guild into the cache
         List<Role> roles = guild.getRolesByName("pride_dm", false);
         if (roles.size() == 0) { // guild does not have pride_dm role
-            return false;
+            return;
         }
         List<Member> admins = guild.getMembersWithRoles(roles);
         for (Member member : admins) {
-            if (user.getId().equals(member.getId())) {
-                return true;
-            }
+            prideBotAdmins.add(member.getId());
         }
-        return false;
+    }
+
+    @Override
+    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
+        super.onGuildMemberRoleAdd(event);
+        System.out.println("Member Role Change Detected");
+        guild = event.getGuild();
+        updatePrideBotAdmins();
+    }
+
+    @Override
+    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
+        super.onGuildMemberRoleRemove(event);
+        System.out.println("Member Role Change Detected");
+        guild = event.getGuild();
+        updatePrideBotAdmins();
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        long start = System.currentTimeMillis();
         guild = event.getGuild();
         author = event.getAuthor();
         message = event.getMessage();
         content = message.getContentRaw();
         channel = event.getChannel();
+
+        if (!guildsDetected.contains(guild.getId())) {
+            updatePrideBotAdmins();
+            guildsDetected.add(guild.getId());
+        }
+
         if (author.isBot()) {
             return;
         }
@@ -57,13 +81,12 @@ public class BotListener extends ListenerAdapter {
         }
         if (content.startsWith("p>")) {
             Command command = new Command(author, content.substring(2));
-            Response response = botModel.process(command, guild, isPrideBotAdmin(author));
+            boolean isPrideBotAdmin = prideBotAdmins.contains(author.getId());
+            Response response = botModel.process(command, guild, isPrideBotAdmin);
             sendResponse(channel, response);
         }
-        Response arsResponse = ars.process(guild, channel, author, message);
-        if (arsResponse != null) {
-            sendResponse(channel, arsResponse);
-        }
+        long end = System.currentTimeMillis();
+        System.out.println("Time to respond: " + (end - start) + " ms"); // DEBUG
     }
 
     private void sendResponse(MessageChannel channel, Response response) {
