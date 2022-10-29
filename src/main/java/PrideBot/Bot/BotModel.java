@@ -1,5 +1,6 @@
 package PrideBot.Bot;
 
+import PrideBot.DND.DaFoin;
 import PrideBot.Game.GameAPI;
 import PrideBot.Game.Results.BuyFailResult;
 import PrideBot.Game.Results.BuyResult;
@@ -26,7 +27,8 @@ public class BotModel {
     private static final String COMMANDS_MESSAGE_HELP = "p>help - Provides some helpful starting information.";
     private static final String COMMANDS_MESSAGE_SPELLS = "p>spells - Provides a list of your spells.";
     private static final String COMMANDS_MESSAGE_CAST = "p>cast <index> - Cast the spell denoted by the index. The index of a spell can be found using the p>spells command.";
-    private static final String COMMANDS_DESCRIBE = "p>describe <args> - Describes the given thing. WIP.";
+    private static final String COMMANDS_MESSAGE_DESCRIBE = "p>describe <args> - Describes the given thing. WIP.";
+    private static final String COMMANDS_MESSAGE_DAFOIN = "p>dafoin - Flips DA FOIN.";
 
     private GameAPI api;
     private final long START_TIME;
@@ -89,9 +91,20 @@ public class BotModel {
                 return cast(command);
             case "DESCRIBE":
                 return describe(command);
+            case "DAFOIN":
+                return flipDaFoin(command);
             default:
                 return ERR_INVALID_COMMAND;
         }
+    }
+
+    private Response flipDaFoin(Command command) {
+        String fish = DaFoin.getFish();
+        int direness = DaFoin.getDireness();
+        return new Response(
+                command.getAuthor().getName() + " has flipped DA FOIN!" +
+                "\nA " + fish + " of direness " + direness + " has been spawned."
+        );
     }
 
     private static final Response PRIDE_DESCRIPTION = new Response("Pride:" +
@@ -487,11 +500,12 @@ public class BotModel {
                 "\n\t" + COMMANDS_MESSAGE_STATS +
                 "\n\t" + COMMANDS_MESSAGE_SPELLS +
                 "\n\t" + COMMANDS_MESSAGE_CAST +
-                "\n\t" + COMMANDS_DESCRIBE +
+                "\n\t" + COMMANDS_MESSAGE_DESCRIBE +
                 "\n\t" + COMMANDS_MESSAGE_GAMEINFO +
                 "\n\t" + COMMANDS_MESSAGE_BOTINFO +
                 "\n\t" + COMMANDS_MESSAGE_COMMANDS +
-                "\n\t" + COMMANDS_MESSAGE_HELP
+                "\n\t" + COMMANDS_MESSAGE_HELP +
+                "\n\t" + COMMANDS_MESSAGE_DAFOIN
         );
     }
 
