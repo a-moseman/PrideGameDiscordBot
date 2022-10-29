@@ -174,7 +174,7 @@ public class BotModel {
             "\n\tTo get information on a spell you have, use p>describe spell <index>, where index is the index of the spell in your spellbook."
     );
     private static final Response DAFOIN_DESCRIPTION = new Response("DA FOIN:" +
-            "\n\t\"It just generates a fish, and fucking murders it\" - A slightly drunk Glyphical."
+            "\n\t\"It just generates a fish, and fucking murders it\" - A slightly drunk Andrew."
     );
 
 
@@ -460,10 +460,10 @@ public class BotModel {
         return new Response(name +  "'s Stats:" +
                 "\n\tPride: " + api.getPride(uuid) +
                 "\n\tShame: " + api.getShame(uuid) +
-                "\n\tEgo: " + api.getEgo(uuid) +
-                "\n\tGuilt: " + api.getGuilt(uuid) +
-                "\n\tHonor: " + api.getHonor(uuid) +
-                "\n\tDishonor: " + api.getDishonor(uuid)
+                "\n\tEgo: " + api.getEgo(uuid) + " (" + api.getPrideToNextEgo(uuid) + " pride to next)" +
+                "\n\tGuilt: " + api.getGuilt(uuid) + " (" + api.getShameToNextGuilt(uuid) + " shame to next)" +
+                "\n\tHonor: " + api.getHonor(uuid) + " (" + api.getEgoToNextHonor(uuid) + " ego to next)" +
+                "\n\tDishonor: " + api.getDishonor(uuid) + " (" + api.getGuiltToNextDishonor(uuid) + " guilt to next)"
         );
     }
 

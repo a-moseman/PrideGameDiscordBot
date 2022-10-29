@@ -297,4 +297,20 @@ public class GameAPI {
     public String getSpellDescription(String uuid, int spellIndex) {
         return gameModel.getPlayer(uuid).getSpellBookModule().getSpellDescription(spellIndex);
     }
+
+    public long getPrideToNextEgo(String uuid) {
+        return gameModel.getPlayer(uuid).getStats().costOfNextEgo() - gameModel.getPlayer(uuid).getStats().getPride();
+    }
+
+    public long getShameToNextGuilt(String uuid) {
+        return gameModel.getPlayer(uuid).getStats().costOfNextGuilt() - gameModel.getPlayer(uuid).getStats().getShame();
+    }
+
+    public long getEgoToNextHonor(String uuid) {
+        return gameModel.getPlayer(uuid).getStats().costOfNextHonor() - gameModel.getPlayer(uuid).getStats().getEgo();
+    }
+
+    public long getGuiltToNextDishonor(String uuid) {
+        return gameModel.getPlayer(uuid).getStats().costOfNextDishonor() - gameModel.getPlayer(uuid).getStats().getGuilt();
+    }
 }
