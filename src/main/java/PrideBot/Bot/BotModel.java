@@ -103,7 +103,7 @@ public class BotModel {
         Fish fish = DaFoin.flip();
         return new Response(
                 command.getAuthor().getName() + " has flipped DA FOIN!" +
-                "\nA " + fish.NAME + " of direness " + fish.DIRENESS + " has been spawned."
+                "\nA " + fish.NAME + " of direness " + fish.DIRENESS + " has spawned."
         );
     }
 
@@ -173,6 +173,9 @@ public class BotModel {
             "\n\tHowever, the spell effects do stack, with the exception of pride favored and shame favored which override." +
             "\n\tTo get information on a spell you have, use p>describe spell <index>, where index is the index of the spell in your spellbook."
     );
+    private static final Response DAFOIN_DESCRIPTION = new Response("DA FOIN:" +
+            "\n\t\"It just generates a fish, and fucking murders it\" - A slightly drunk Glyphical."
+    );
 
 
     private Response describe(Command command) {
@@ -207,6 +210,8 @@ public class BotModel {
                 return SPELLBOOK_DESCRIPTION;
             case "SPELLS":
                 return SPELLS_DESCRIPTION;
+            case "DAFOIN":
+                return DAFOIN_DESCRIPTION;
             default:
                 return new Response("I do not have a description for that.");
         }
