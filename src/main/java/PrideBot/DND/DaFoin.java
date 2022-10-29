@@ -5,11 +5,15 @@ import java.util.Random;
 public class DaFoin {
     private final static Random RANDOM = new Random();
 
-    public static int getDireness() {
+    public static Fish flip() {
+        return new Fish(getFish(), getDireness());
+    }
+
+    private static int getDireness() {
         return RANDOM.nextInt(20) + 1;
     }
 
-    public static String getFish() {
+    private static String getFish() {
         return FISH[RANDOM.nextInt(FISH.length - 1)];
     }
 

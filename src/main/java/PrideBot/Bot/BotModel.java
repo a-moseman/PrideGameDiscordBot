@@ -1,6 +1,7 @@
 package PrideBot.Bot;
 
 import PrideBot.DND.DaFoin;
+import PrideBot.DND.Fish;
 import PrideBot.Game.GameAPI;
 import PrideBot.Game.Results.BuyFailResult;
 import PrideBot.Game.Results.BuyResult;
@@ -99,11 +100,10 @@ public class BotModel {
     }
 
     private Response flipDaFoin(Command command) {
-        String fish = DaFoin.getFish();
-        int direness = DaFoin.getDireness();
+        Fish fish = DaFoin.flip();
         return new Response(
                 command.getAuthor().getName() + " has flipped DA FOIN!" +
-                "\nA " + fish + " of direness " + direness + " has been spawned."
+                "\nA " + fish.NAME + " of direness " + fish.DIRENESS + " has been spawned."
         );
     }
 
