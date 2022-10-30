@@ -1,5 +1,7 @@
 package PrideBot.Concepts.ForVersion2;
 
+import PrideBot.Combat.Dice;
+
 import java.util.ArrayList;
 
 public class CombatStats {

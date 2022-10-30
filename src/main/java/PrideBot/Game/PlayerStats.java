@@ -49,9 +49,14 @@ public class PlayerStats {
         this.dishonor = dishonor;
     }
 
-    protected void addPride(long amount) {
+    public void addPride(long amount) {
         assert amount >= 0;
         pride += amount;
+    }
+
+    public void removePride(long amount) {
+        assert amount >= 0 && amount <= pride;
+        pride -= amount;
     }
 
     protected boolean buyEgo() {
@@ -72,9 +77,14 @@ public class PlayerStats {
         return false;
     }
 
-    protected void addShame(long amount) {
+    public void addShame(long amount) {
         assert amount >= 0;
         shame += amount;
+    }
+
+    public void removeShame(long amount) {
+        assert amount >= 0 && amount <= shame;
+        shame -= amount;
     }
 
     protected boolean buyGuilt() {
@@ -107,7 +117,7 @@ public class PlayerStats {
         return Math.max(pride, shame);
     }
 
-    protected long getPride() {
+    public long getPride() {
         return pride;
     }
 
@@ -119,7 +129,7 @@ public class PlayerStats {
         return honor;
     }
 
-    protected long getShame() {
+    public long getShame() {
         return shame;
     }
 

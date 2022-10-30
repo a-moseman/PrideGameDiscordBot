@@ -1,5 +1,6 @@
 package PrideBot.Game;
 
+import PrideBot.Combat.CombatModule;
 import PrideBot.SpellBook.Spell;
 import PrideBot.SpellBook.SpellBookModule;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -197,7 +198,7 @@ public class Player implements Comparable<Player> {
         }
     }
 
-    protected PlayerStats getStats() {
+    public PlayerStats getStats() {
         return stats;
     }
 
@@ -207,6 +208,10 @@ public class Player implements Comparable<Player> {
 
     protected SpellBookModule getSpellBookModule() {
         return spellBookModule;
+    }
+
+    public CombatModule getCombatModule() {
+        return null; // TODO: implement
     }
 
     protected ObjectNode buildJsonNode(ObjectMapper mapper) {

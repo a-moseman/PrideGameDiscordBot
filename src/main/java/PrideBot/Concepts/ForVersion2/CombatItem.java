@@ -1,5 +1,7 @@
 package PrideBot.Concepts.ForVersion2;
 
+import PrideBot.Combat.Dice;
+
 public class CombatItem {
     private Dice attackDice;
     private Dice defenseDice;
