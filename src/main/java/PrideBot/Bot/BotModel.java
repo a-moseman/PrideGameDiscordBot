@@ -102,6 +102,8 @@ public class BotModel {
                 return flipDaFoin(command);
             case "RANKS":
                 return ranks(command);
+            case "WIKI":
+                return wiki(command);
             default:
                 return ERR_INVALID_COMMAND;
         }
@@ -502,8 +504,13 @@ public class BotModel {
                 "\n\tUptime: " + getUptime() + " days" +
                 "\n\tVersion: v2.2" +
                 "\n\tDeveloper: Glyphical" +
-                "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot"
+                "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot" +
+                "\n\tWiki: https://github.com/a-moseman/PrideGameDiscordBot/wiki"
         );
+    }
+
+    private Response wiki(Command command) {
+        return new Response("Wiki: https://github.com/a-moseman/PrideGameDiscordBot/wiki");
     }
 
     private double getUptime() {
