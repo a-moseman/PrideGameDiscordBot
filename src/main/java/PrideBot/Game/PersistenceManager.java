@@ -96,6 +96,9 @@ public class PersistenceManager {
             return null;
         }
         JsonNode spellsNode = spellBookNode.get("spells");
+        if (spellsNode == null) {
+            return null;
+        }
         ArrayList<Spell> spells = new ArrayList<>();
         JsonNode spellNode;
         String spellName;
@@ -107,6 +110,9 @@ public class PersistenceManager {
             spells.add(SpellBookModule.generateSpell(spellName, spellLevel));
         }
         JsonNode currentSpellEffectNode = spellBookNode.get("current_spell_effect");
+        if (currentSpellEffectNode == null) {
+            return null;
+        }
         double collectionCritChance = currentSpellEffectNode.get("collection_crit_chance").asDouble();
         boolean prideFavored = currentSpellEffectNode.get("pride_favored").asBoolean();
         boolean  shameFavored = currentSpellEffectNode.get("shame_favored").asBoolean();
