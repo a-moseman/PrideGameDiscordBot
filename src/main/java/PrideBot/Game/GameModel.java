@@ -53,6 +53,10 @@ public class GameModel {
     }
 
     protected void setName(String uuid, String name) {
+        if (!players.containsKey(uuid)) {
+            System.out.println(name + " NOT IN GAME"); // DEBUG
+            return;
+        }
         getPlayer(uuid).setName(name);
     }
 }

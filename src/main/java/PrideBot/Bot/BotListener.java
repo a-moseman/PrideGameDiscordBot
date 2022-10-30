@@ -50,6 +50,9 @@ public class BotListener extends ListenerAdapter {
     private void updateNames(Guild guild) {
         List<Member> members = guild.getMembers();
         for (Member member : members) {
+            if (member.getUser().isBot()) {
+                continue;
+            }
             botModel.updateName(member.getId(), member.getUser().getName());
         }
     }
@@ -57,6 +60,9 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         super.onGuildMemberJoin(event);
+        if (event.getUser().isBot()) {
+            return;
+        }
         botModel.addNewPlayer(event.getUser().getId());
         botModel.updateName(event.getUser().getId(), event.getUser().getName());
     }
@@ -64,6 +70,9 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onUserUpdateName(UserUpdateNameEvent event) {
         super.onUserUpdateName(event);
+        if (event.getUser().isBot()) {
+            return;
+        }
         botModel.updateName(event.getUser().getId(), event.getNewName());
     }
 
