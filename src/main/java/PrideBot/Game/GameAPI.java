@@ -5,8 +5,9 @@ import PrideBot.Game.Results.BuyResult;
 import PrideBot.Game.Results.BuySuccessResult;
 import PrideBot.Game.Results.Currency;
 
+import java.util.List;
+
 /**
- * Finished for version 1.
  * The API of the game.
  * The only thing accessible outside of the PrideBot.Game package.
  */
@@ -312,5 +313,20 @@ public class GameAPI {
 
     public long getGuiltToNextDishonor(String uuid) {
         return gameModel.getPlayer(uuid).getStats().costOfNextDishonor() - gameModel.getPlayer(uuid).getStats().getGuilt();
+    }
+
+    public String getTopNPlayers(int n) {
+        List<Player> players = gameModel.getRankedPlayers();
+        int m = Math.min(n, players.size());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ranks:\n");
+        for (int i = m - 1; i >= 0; i--) {
+            sb.append("\t").append(m - i).append(". ").append(players.get(i).getName()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void setName(String uuid, String name) {
+        gameModel.setName(uuid, name);
     }
 }

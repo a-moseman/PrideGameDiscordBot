@@ -5,14 +5,21 @@ import PrideBot.SpellBook.SpellBookModule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Finished for version 1.
- */
-public class Player {
+public class Player implements Comparable<Player> {
     protected final String UUID;
     private PlayerStats stats;
     private long lastCollectionTime;
+    private String name; // DO NOT STORE PERSISTENTLY
+
+    protected String getName() {
+        return name;
+    }
+
+    protected void setName(String name) {
+        this.name = name;
+    }
 
     private SpellBookModule spellBookModule;
 
@@ -21,6 +28,7 @@ public class Player {
      * @param uuid The UUID of the player.
      */
     protected Player(String uuid) {
+        this.name = "[missing]";
         this.UUID = uuid;
         this.stats = new PlayerStats();
         this.lastCollectionTime = 0;
@@ -35,6 +43,7 @@ public class Player {
      * @param lastCollectionTime The last time the player collected.
      */
     protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime) {
+        this.name = "[missing]";
         this.UUID = uuid;
         this.stats = playerStats;
         this.lastCollectionTime = lastCollectionTime;
@@ -50,6 +59,7 @@ public class Player {
      * @param spellBookModule The spell book module of the player.
      */
     protected Player(String uuid, PlayerStats playerStats, long lastCollectionTime, SpellBookModule spellBookModule) {
+        this.name = "[missing]";
         this.UUID = uuid;
         this.stats = playerStats;
         this.lastCollectionTime = lastCollectionTime;
@@ -211,5 +221,34 @@ public class Player {
             node.set("spell_book", spellBookModule.buildJsonNode(mapper));
         }
         return node;
+    }
+
+    @Override
+    public int compareTo(@NotNull Player o) {
+        if (stats.getLevel() > o.getStats().getLevel()) {
+            return 1;
+        }
+        else if (stats.getLevel() < o.getStats().getLevel()) {
+            return -1;
+        }
+        else {
+            if (stats.getTierOne() > o.getStats().getTierOne()) {
+                return 1;
+            }
+            else if (stats.getTierOne() < o.getStats().getTierOne()) {
+                return -1;
+            }
+            else {
+                if (stats.getTierZero() > o.getStats().getTierZero()) {
+                    return 1;
+                }
+                else if (stats.getTierZero() < o.stats.getTierZero()) {
+                    return -1;
+                }
+                else  {
+                    return 0;
+                }
+            }
+        }
     }
 }

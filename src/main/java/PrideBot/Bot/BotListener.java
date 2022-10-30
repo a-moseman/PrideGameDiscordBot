@@ -3,9 +3,12 @@ package PrideBot.Bot;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +47,26 @@ public class BotListener extends ListenerAdapter {
         }
     }
 
+    private void updateNames(Guild guild) {
+        List<Member> members = guild.getMembers();
+        for (Member member : members) {
+            botModel.updateName(member.getId(), member.getUser().getName());
+        }
+    }
+
+    @Override
+    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+        super.onGuildMemberJoin(event);
+        botModel.addNewPlayer(event.getUser().getId());
+        botModel.updateName(event.getUser().getId(), event.getUser().getName());
+    }
+
+    @Override
+    public void onUserUpdateName(UserUpdateNameEvent event) {
+        super.onUserUpdateName(event);
+        botModel.updateName(event.getUser().getId(), event.getNewName());
+    }
+
     @Override
     public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
         super.onGuildMemberRoleAdd(event);
@@ -71,6 +94,7 @@ public class BotListener extends ListenerAdapter {
 
         if (!guildsDetected.contains(guild.getId())) {
             updatePrideBotAdmins();
+            updateNames(guild);
             guildsDetected.add(guild.getId());
         }
 

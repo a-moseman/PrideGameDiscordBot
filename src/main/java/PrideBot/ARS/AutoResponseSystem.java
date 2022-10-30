@@ -12,7 +12,6 @@ public class AutoResponseSystem {
     private final static double TWO_DAY_GREET_PROBABILITY = 0.10;
     private final static double WEEK_GREET_PROBABILITY = 0.5;
 
-
     private ResponseGenerator greeter;
 
     private HashMap<String, Long> playersLastSeenTimes;

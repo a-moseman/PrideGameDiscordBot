@@ -99,6 +99,14 @@ public class PlayerStats {
         return Math.max(honor, dishonor);
     }
 
+    protected long getTierOne() {
+        return Math.max(ego, guilt);
+    }
+
+    protected long getTierZero() {
+        return Math.max(pride, shame);
+    }
+
     protected long getPride() {
         return pride;
     }

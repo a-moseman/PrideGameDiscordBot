@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,11 +38,21 @@ public class GameModel {
         return new ArrayList<>(players.values());
     }
 
+    protected List<Player> getRankedPlayers() {
+        List<Player> players = getPlayers();
+        Collections.sort(players);
+        return players;
+    }
+
     protected List<ObjectNode> buildPlayerJsonNode(ObjectMapper mapper) {
         List<ObjectNode> playersList = new ArrayList<>();
         for (Player player : players.values()) {
             playersList.add(player.buildJsonNode(mapper));
         }
         return playersList;
+    }
+
+    protected void setName(String uuid, String name) {
+        getPlayer(uuid).setName(name);
     }
 }

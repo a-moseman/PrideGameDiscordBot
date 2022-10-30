@@ -34,13 +34,19 @@ public class BotModel {
     private GameAPI api;
     private final long START_TIME;
 
-    private int AUTO_SAVE_RATE_IN_MINUTES = 45;
+    private final int AUTO_SAVE_RATE_IN_MINUTES = 45;
     private long lastSaveTime;
+
+    private final int RANKS_TO_SHOW = 10;
 
     public BotModel(String savePath) {
         this.START_TIME = System.currentTimeMillis();
         this.lastSaveTime = System.currentTimeMillis();
         this.api = new GameAPI(savePath);
+    }
+
+    public void updateName(String uuid, String name) {
+        api.setName(uuid, name);
     }
 
     public void save() {
@@ -94,9 +100,17 @@ public class BotModel {
                 return describe(command);
             case "DAFOIN":
                 return flipDaFoin(command);
+            case "RANKS":
+                return ranks(command);
             default:
                 return ERR_INVALID_COMMAND;
         }
+    }
+
+    private Response ranks(Command command) {
+        return new Response(
+                api.getTopNPlayers(RANKS_TO_SHOW)
+        );
     }
 
     private Response flipDaFoin(Command command) {
