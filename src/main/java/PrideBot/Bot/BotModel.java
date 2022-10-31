@@ -193,6 +193,14 @@ public class BotModel {
     private static final Response DAFOIN_DESCRIPTION = new Response("DA FOIN:" +
             "\n\t\"It just generates a fish, and fucking murders it\" - A slightly drunk Andrew."
     );
+    private static final Response ALIAS_DESCRIPTION = new Response("Aliases:" +
+            "\n\t^ - collect" +
+            "\n\tcoll - collect" +
+            "\n\t? - describe" +
+            "\n\tdesc - describe" +
+            "\n\th - help" +
+            "\n\t$ - buy"
+            );
 
 
     private Response describe(Command command) {
