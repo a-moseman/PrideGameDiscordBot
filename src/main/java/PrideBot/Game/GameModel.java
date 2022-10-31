@@ -27,6 +27,9 @@ public class GameModel {
     }
 
     protected void addNewPlayer(String uuid) {
+        if (players.containsKey(uuid)) { // DO NOT REMOVE: THIS PROTECTS PLAYER DATA FROM BEING OVERWRITTEN IN CASE OF BUG
+            return;
+        }
         players.put(uuid, new Player(uuid));
     }
 

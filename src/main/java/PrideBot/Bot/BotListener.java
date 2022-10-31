@@ -66,7 +66,9 @@ public class BotListener extends ListenerAdapter {
         if (event.getUser().isBot()) {
             return;
         }
-        botModel.addNewPlayer(event.getUser().getId());
+        if (!botModel.doesPlayerExist(event.getUser().getId())) {
+            botModel.addNewPlayer(event.getUser().getId());
+        }
         botModel.updateName(event.getUser().getId(), event.getUser().getName());
     }
 
@@ -75,6 +77,9 @@ public class BotListener extends ListenerAdapter {
         super.onUserUpdateName(event);
         if (event.getUser().isBot()) {
             return;
+        }
+        if (!botModel.doesPlayerExist(event.getUser().getId())) {
+            botModel.addNewPlayer(event.getUser().getId());
         }
         botModel.updateName(event.getUser().getId(), event.getNewName());
     }
