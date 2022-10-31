@@ -30,6 +30,7 @@ public class BotModel {
     private static final String COMMANDS_MESSAGE_CAST = "p>cast <index> - Cast the spell denoted by the index. The index of a spell can be found using the p>spells command.";
     private static final String COMMANDS_MESSAGE_DESCRIBE = "p>describe <args> - Describes the given thing. WIP.";
     private static final String COMMANDS_MESSAGE_DAFOIN = "p>dafoin - Flips DA FOIN.";
+    private static final String COMMANDS_MESSAGE_RANKS = "p>ranks - Provides a list of the top 10 players.";
 
     private GameAPI api;
     private final long START_TIME;
@@ -531,7 +532,8 @@ public class BotModel {
                 "\n\t" + COMMANDS_MESSAGE_BOTINFO +
                 "\n\t" + COMMANDS_MESSAGE_COMMANDS +
                 "\n\t" + COMMANDS_MESSAGE_HELP +
-                "\n\t" + COMMANDS_MESSAGE_DAFOIN
+                "\n\t" + COMMANDS_MESSAGE_DAFOIN +
+                "\n\t" + COMMANDS_MESSAGE_RANKS
         );
     }
 
