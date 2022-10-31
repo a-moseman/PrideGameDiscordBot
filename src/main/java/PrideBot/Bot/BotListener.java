@@ -122,7 +122,6 @@ public class BotListener extends ListenerAdapter {
             sendResponse(channel, response);
         }
         long end = System.currentTimeMillis();
-        System.out.println("Time to respond: " + (end - start) + " ms"); // DEBUG
     }
 
     private void sendResponse(MessageChannel channel, Response response) {
