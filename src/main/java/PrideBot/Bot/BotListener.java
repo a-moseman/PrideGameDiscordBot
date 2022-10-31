@@ -35,7 +35,6 @@ public class BotListener extends ListenerAdapter {
     }
 
     private void updatePrideBotAdmins() {
-        prideBotAdmins.clear();
         guild.loadMembers(); // load the members of the guild into the cache
         List<Role> roles = guild.getRolesByName("pride_dm", false);
         if (roles.size() == 0) { // guild does not have pride_dm role
@@ -43,7 +42,9 @@ public class BotListener extends ListenerAdapter {
         }
         List<Member> admins = guild.getMembersWithRoles(roles);
         for (Member member : admins) {
-            prideBotAdmins.add(member.getId());
+            if (!prideBotAdmins.contains(member.getId())) {
+                prideBotAdmins.add(member.getId());
+            }
         }
     }
 
