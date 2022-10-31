@@ -10,14 +10,16 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BotListener extends ListenerAdapter {
     private BotModel botModel;
-    private ArrayList<String> prideBotAdmins;
+    private HashMap<String, ArrayList<String>> prideBotAdmins;
     private ArrayList<String> guildsDetected;
 
     // variables for onMessageReceived
@@ -30,21 +32,20 @@ public class BotListener extends ListenerAdapter {
 
     public BotListener(BotModel botModel) {
         this.botModel = botModel;
-        this.prideBotAdmins = new ArrayList<>();
+        this.prideBotAdmins = new HashMap<>();
         this.guildsDetected = new ArrayList<>();
     }
 
     private void updatePrideBotAdmins() {
         guild.loadMembers(); // load the members of the guild into the cache
+        prideBotAdmins.put(guild.getId(), new ArrayList<>());
         List<Role> roles = guild.getRolesByName("pride_dm", false);
         if (roles.size() == 0) { // guild does not have pride_dm role
             return;
         }
         List<Member> admins = guild.getMembersWithRoles(roles);
         for (Member member : admins) {
-            if (!prideBotAdmins.contains(member.getId())) {
-                prideBotAdmins.add(member.getId());
-            }
+            prideBotAdmins.get(guild.getId()).add(member.getId());
         }
     }
 
@@ -116,7 +117,7 @@ public class BotListener extends ListenerAdapter {
         }
         if (content.startsWith("p>")) {
             Command command = new Command(author, content.substring(2));
-            boolean isPrideBotAdmin = prideBotAdmins.contains(author.getId());
+            boolean isPrideBotAdmin = prideBotAdmins.get(guild.getId()).contains(author.getId());
             Response response = botModel.process(command, guild, isPrideBotAdmin);
             sendResponse(channel, response);
         }
