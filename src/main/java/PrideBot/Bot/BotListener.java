@@ -50,8 +50,11 @@ public class BotListener extends ListenerAdapter {
     private void updateNames(Guild guild) {
         List<Member> members = guild.getMembers();
         for (Member member : members) {
-            if (member.getUser().isBot() || !botModel.doesPlayerExist(member.getId())) {
+            if (member.getUser().isBot()) {
                 continue;
+            }
+            if (!botModel.doesPlayerExist(member.getId())) {
+                botModel.addNewPlayer(member.getId());
             }
             botModel.updateName(member.getId(), member.getUser().getName());
         }
