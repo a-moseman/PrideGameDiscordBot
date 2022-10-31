@@ -44,7 +44,9 @@ public class CombatSimulator {
                 amountExchanged,
                 type ? "Pride" : "Shame",
                 attackRoll,
-                defenseRoll
+                defenseRoll,
+                healthLost,
+                0
         );
     }
 

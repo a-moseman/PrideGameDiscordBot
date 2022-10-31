@@ -10,8 +10,8 @@ public class CombatStats {
     private ArrayList<CombatItem> combatItems;
 
     protected CombatStats() {
-        this.attackDice = Dice.D6;
-        this.defenseDice = Dice.D6;
+        //this.attackDice = Dice.D6;
+        //this.defenseDice = Dice.D6;
         this.combatItems = new ArrayList<>();
     }
 
@@ -22,11 +22,11 @@ public class CombatStats {
     }
 
     protected void addAttackDice(Dice addition) {
-        attackDice = attackDice.add(addition);
+        //attackDice = attackDice.add(addition);
     }
 
     protected void addDefenseDice(Dice addition) {
-        defenseDice = defenseDice.add(addition);
+        //defenseDice = defenseDice.add(addition);
     }
 
     protected Dice getAttackDice() {
