@@ -47,6 +47,9 @@ public class Command {
                 }
             }
         }
+        if (!term.toString().equals("")) {
+            terms.add(term.toString());
+        }
     }
 
     public User getAuthor() {
