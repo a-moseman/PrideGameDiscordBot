@@ -94,7 +94,6 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        long start = System.currentTimeMillis();
         guild = event.getGuild();
         author = event.getAuthor();
         message = event.getMessage();
@@ -119,7 +118,6 @@ public class BotListener extends ListenerAdapter {
             Response response = botModel.process(command, guild, isPrideBotAdmin);
             sendResponse(channel, response);
         }
-        long end = System.currentTimeMillis();
     }
 
     private void sendResponse(MessageChannel channel, Response response) {
