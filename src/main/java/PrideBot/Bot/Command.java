@@ -19,34 +19,37 @@ public class Command {
         int i;
         char ch;
         boolean inQuotes = false;
-        String term = "";
-        for (i = 0; i < raw.length(); i++) {
-            ch = raw.charAt(i);
+        StringBuilder term = new StringBuilder();
+        char[] arr = raw.toCharArray();
+        for (i = 0; i < arr.length; i++) {
+            ch = arr[i];
             if (ch == '"') {
                 if (inQuotes) {
-                    terms.add(term);
-                    term = "";
+                    terms.add(term.toString());
+                    term = new StringBuilder();
                 }
-                else {
-                    inQuotes = true;
-                }
+                inQuotes = !inQuotes;
             }
             else {
                 if (inQuotes) {
-                    term += ch;
+                    term.append(ch);
                 }
                 else {
                     if (ch == ' ') {
-                        terms.add(term);
-                        term = "";
+                        if (!term.toString().equals("")) {
+                            terms.add(term.toString());
+                            term = new StringBuilder();
+                        }
                     }
                     else {
-                        term += ch;
+                        term.append(ch);
                     }
                 }
             }
         }
-        terms.add(term);
+        if (!term.toString().equals("")) {
+            terms.add(term.toString());
+        }
     }
 
     public User getAuthor() {
@@ -59,5 +62,31 @@ public class Command {
 
     public String getTerm(int index) {
         return terms.get(index);
+    }
+
+    /**
+     * Test command class.
+     * Last Runtime = ~50000ns-110000ns
+     */
+    public static void main(String[] args) {
+        long start = System.nanoTime();
+        Command c1 = new Command(null, "p>describe \"DA FOIN\"");
+        Command c2 = new Command(null, "p>a \"b c\" \"d e\"");
+        long end = System.nanoTime();
+        boolean test = c1.getTerm(0).equals("p>describe") &&
+                c1.getTerm(1).equals("DA FOIN") &&
+                c2.getTerm(0).equals("p>a") &&
+                c2.getTerm(1).equals("b c") &&
+                //c2.getTerm(2).equals("c") &&
+                c2.getTerm(2).equals("d e");
+        System.out.println("Test: " + (test ? " success" : " failure"));
+        System.out.println("Runtime: " + (end - start) + " ns");
+
+        for (int i = 0; i < c1.getSize(); i++) {
+            System.out.println("> " + c1.getTerm(i));
+        }
+        for (int i = 0; i < c2.getSize(); i++) {
+            System.out.println("> " + c2.getTerm(i));
+        }
     }
 }

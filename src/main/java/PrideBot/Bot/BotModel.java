@@ -30,6 +30,7 @@ public class BotModel {
     private static final String COMMANDS_MESSAGE_CAST = "p>cast <index> - Cast the spell denoted by the index. The index of a spell can be found using the p>spells command.";
     private static final String COMMANDS_MESSAGE_DESCRIBE = "p>describe <args> - Describes the given thing. WIP.";
     private static final String COMMANDS_MESSAGE_DAFOIN = "p>dafoin - Flips DA FOIN.";
+    private static final String COMMANDS_MESSAGE_RANKS = "p>ranks - Provides a list of the top 10 players.";
 
     private GameAPI api;
     private final long START_TIME;
@@ -102,6 +103,8 @@ public class BotModel {
                 return flipDaFoin(command);
             case "RANKS":
                 return ranks(command);
+            case "WIKI":
+                return wiki(command);
             default:
                 return ERR_INVALID_COMMAND;
         }
@@ -190,6 +193,14 @@ public class BotModel {
     private static final Response DAFOIN_DESCRIPTION = new Response("DA FOIN:" +
             "\n\t\"It just generates a fish, and fucking murders it\" - A slightly drunk Andrew."
     );
+    private static final Response ALIAS_DESCRIPTION = new Response("Aliases:" +
+            "\n\t^ - collect" +
+            "\n\tcoll - collect" +
+            "\n\t? - describe" +
+            "\n\tdesc - describe" +
+            "\n\th - help" +
+            "\n\t$ - buy"
+            );
 
 
     private Response describe(Command command) {
@@ -502,8 +513,13 @@ public class BotModel {
                 "\n\tUptime: " + getUptime() + " days" +
                 "\n\tVersion: v2.2" +
                 "\n\tDeveloper: Glyphical" +
-                "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot"
+                "\n\tGitHub: https://github.com/a-moseman/PrideGameDiscordBot" +
+                "\n\tWiki: https://github.com/a-moseman/PrideGameDiscordBot/wiki"
         );
+    }
+
+    private Response wiki(Command command) {
+        return new Response("Wiki: https://github.com/a-moseman/PrideGameDiscordBot/wiki");
     }
 
     private double getUptime() {
@@ -524,7 +540,8 @@ public class BotModel {
                 "\n\t" + COMMANDS_MESSAGE_BOTINFO +
                 "\n\t" + COMMANDS_MESSAGE_COMMANDS +
                 "\n\t" + COMMANDS_MESSAGE_HELP +
-                "\n\t" + COMMANDS_MESSAGE_DAFOIN
+                "\n\t" + COMMANDS_MESSAGE_DAFOIN +
+                "\n\t" + COMMANDS_MESSAGE_RANKS
         );
     }
 

@@ -9,8 +9,6 @@ public class Aliaser {
             case "?":
             case "DESC":
                 return "DESCRIBE";
-            case "COMM":
-                return "COMMAND";
             case "H":
                 return "HELP";
             case "$":

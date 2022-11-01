@@ -1,5 +1,6 @@
 package PrideBot.DND;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class DaFoin {
@@ -65,7 +66,6 @@ public class DaFoin {
             "Remora",
             "Giant Koi",
             "Thresher Shark",
-            "Mako Shark",
             "Megalodon",
             "Sailfish",
             "Bull Shark",
@@ -103,7 +103,6 @@ public class DaFoin {
             "Blackfin Tuna",
             "Halibut",
             "White Bass",
-            "Catfish",
             "Golden Dorado",
             "Paddlefish",
             "Sockeye Salmon",
@@ -172,7 +171,6 @@ public class DaFoin {
             "Basselet",
             "Pejerry",
             "Kahawai",
-            "Flying Fish",
             "Dhutfish",
             "Pink Maomao",
             "Pike Perch",
@@ -204,4 +202,22 @@ public class DaFoin {
             "Spidercrab",
             "Reaper Leviathan"
     };
+
+    /**
+     * Check for duplicates.
+     */
+    public static void main(String[] args) {
+        ArrayList<String> duplicates = new ArrayList<>();
+        for (int i = 0; i < FISH.length; i++) {
+            for (int j = 0; j < FISH.length; j++) {
+                if (i != j && FISH[i].equals(FISH[j]) && !duplicates.contains(FISH[i])) {
+                    duplicates.add(FISH[i]);
+                }
+            }
+        }
+        System.out.println("Duplicates:");
+        for (String dupe : duplicates) {
+            System.out.println('\t' + dupe);
+        }
+    }
 }

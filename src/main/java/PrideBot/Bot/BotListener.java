@@ -3,7 +3,6 @@ package PrideBot.Bot;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
@@ -13,11 +12,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BotListener extends ListenerAdapter {
     private BotModel botModel;
-    private ArrayList<String> prideBotAdmins;
+    private HashMap<String, ArrayList<String>> prideBotAdmins;
     private ArrayList<String> guildsDetected;
 
     // variables for onMessageReceived
@@ -30,20 +30,20 @@ public class BotListener extends ListenerAdapter {
 
     public BotListener(BotModel botModel) {
         this.botModel = botModel;
-        this.prideBotAdmins = new ArrayList<>();
+        this.prideBotAdmins = new HashMap<>();
         this.guildsDetected = new ArrayList<>();
     }
 
     private void updatePrideBotAdmins() {
-        prideBotAdmins.clear();
         guild.loadMembers(); // load the members of the guild into the cache
+        prideBotAdmins.put(guild.getId(), new ArrayList<>());
         List<Role> roles = guild.getRolesByName("pride_dm", false);
         if (roles.size() == 0) { // guild does not have pride_dm role
             return;
         }
         List<Member> admins = guild.getMembersWithRoles(roles);
         for (Member member : admins) {
-            prideBotAdmins.add(member.getId());
+            prideBotAdmins.get(guild.getId()).add(member.getId());
         }
     }
 
@@ -52,6 +52,9 @@ public class BotListener extends ListenerAdapter {
         for (Member member : members) {
             if (member.getUser().isBot()) {
                 continue;
+            }
+            if (!botModel.doesPlayerExist(member.getId())) {
+                botModel.addNewPlayer(member.getId());
             }
             botModel.updateName(member.getId(), member.getUser().getName());
         }
@@ -63,7 +66,9 @@ public class BotListener extends ListenerAdapter {
         if (event.getUser().isBot()) {
             return;
         }
-        botModel.addNewPlayer(event.getUser().getId());
+        if (!botModel.doesPlayerExist(event.getUser().getId())) {
+            botModel.addNewPlayer(event.getUser().getId());
+        }
         botModel.updateName(event.getUser().getId(), event.getUser().getName());
     }
 
@@ -72,6 +77,9 @@ public class BotListener extends ListenerAdapter {
         super.onUserUpdateName(event);
         if (event.getUser().isBot()) {
             return;
+        }
+        if (!botModel.doesPlayerExist(event.getUser().getId())) {
+            botModel.addNewPlayer(event.getUser().getId());
         }
         botModel.updateName(event.getUser().getId(), event.getNewName());
     }
@@ -94,7 +102,6 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        long start = System.currentTimeMillis();
         guild = event.getGuild();
         author = event.getAuthor();
         message = event.getMessage();
@@ -115,12 +122,10 @@ public class BotListener extends ListenerAdapter {
         }
         if (content.startsWith("p>")) {
             Command command = new Command(author, content.substring(2));
-            boolean isPrideBotAdmin = prideBotAdmins.contains(author.getId());
+            boolean isPrideBotAdmin = prideBotAdmins.get(guild.getId()).contains(author.getId());
             Response response = botModel.process(command, guild, isPrideBotAdmin);
             sendResponse(channel, response);
         }
-        long end = System.currentTimeMillis();
-        System.out.println("Time to respond: " + (end - start) + " ms"); // DEBUG
     }
 
     private void sendResponse(MessageChannel channel, Response response) {
