@@ -20,4 +20,8 @@ public class CombatModule {
     public Dice getDefenseDice() {
         return combatDice.getDefenseDice();
     }
+
+    public CombatStats.Stats getStats() {
+        return combatStats.getStats();
+    }
 }
