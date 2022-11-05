@@ -300,7 +300,6 @@ public class BotModel {
     }
 
     private Response bless(Command command, Guild guild) {
-        // TODO: add ability to roll for amount
         if (command.getSize() < 3) {
             return ERR_MISSING_ARGS;
         }
@@ -313,7 +312,7 @@ public class BotModel {
         }
         int pride;
         try {
-            pride = Integer.parseInt(command.getTerm(2));
+            pride = AdaptiveValueParser.parse(command.getTerm(2));
         }
         catch (Exception e) {
             return ERR_INVALID_ARG;
@@ -326,7 +325,6 @@ public class BotModel {
     }
 
     private Response curse(Command command, Guild guild) {
-        // TODO: add ability to roll for amount
         if (command.getSize() < 3) {
             return ERR_MISSING_ARGS;
         }
@@ -339,7 +337,7 @@ public class BotModel {
         }
         int shame;
         try {
-            shame = Integer.parseInt(command.getTerm(2));
+            shame = AdaptiveValueParser.parse(command.getTerm(2));
         }
         catch (Exception e) {
             return ERR_INVALID_ARG;

@@ -34,4 +34,12 @@ public class AdaptiveValueParser {
         }
         return out;
     }
+
+    /**
+     * Test AdaptiveValueParser.
+     */
+    public static void main(String[] args) {
+        String in = "1D4 + 10";
+        System.out.println(AdaptiveValueParser.parse(in));
+    }
 }
