@@ -52,18 +52,29 @@ public class CombatStats {
         lastUpdate = now;
     }
 
-    public double hurt(double damage) {
+    public double hurt(Damage damage) {
+        // TODO: test
         update();
-        double damageToHealth = Math.min(damage - shield, health);
-        shield -= damage;
-        if (shield < 0) {
-            health += shield;
-            shield = 0;
-            if (health < 0) {
-                health = 0;
-            }
+        double dmg = damage.DAMAGE;
+        if (dmg * damage.SHIELD_PENETRATION <= shield) {
+            shield -= dmg * damage.SHIELD_PENETRATION;
+            return 0;
         }
-        return damageToHealth;
+        dmg -= shield / damage.SHIELD_PENETRATION;
+        shield = 0;
+        health -= dmg;
+        if (health < 0) {
+            health = 0;
+        }
+        return dmg;
+    }
+
+    public void heal(double amount) {
+        update();
+        health += amount;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
     }
 
     public Stats getStats() {

@@ -15,9 +15,13 @@ public class CombatSimulator {
         long defenseRoll = defenseDice.roll();
 
         // TODO: implement skill effects and such
+        CombatEffect attackerCombatEffects = attacker.getCombatModule().getCurrentEffects();
+        CombatEffect defenderCombatEffects = defender.getCombatModule().getCurrentEffects();
 
         double damage = (double) (defenseRoll - attackRoll);
-        double healthLost = defender.getCombatModule().hurt(damage);
+        double healthLost = defender.getCombatModule().hurt(new Damage(damage, attackerCombatEffects.SHIELD_PENETRATION));
+        // apply lifesteal
+        attacker.getCombatModule().heal(attacker.getCombatModule().getCurrentEffects().LIFESTEAL * healthLost);
         long tierZeroToExchange = convertHealthToTierZero(healthLost);
         long amountExchanged;
         boolean type;

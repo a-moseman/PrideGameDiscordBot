@@ -9,8 +9,12 @@ public class CombatModule {
         this.combatDice = combatDice;
     }
 
-    public double hurt(double damage) {
+    public double hurt(Damage damage) {
         return combatStats.hurt(damage);
+    }
+
+    public void heal(double amount) {
+
     }
 
     public Dice getAttackDice() {
@@ -23,5 +27,10 @@ public class CombatModule {
 
     public CombatStats.Stats getStats() {
         return combatStats.getStats();
+    }
+
+    public CombatEffect getCurrentEffects() {
+        // TODO: implement
+        return null;
     }
 }
